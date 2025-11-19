@@ -126,3 +126,59 @@ StyleValue StyleValue::setStyleValueFromString (StyleProperty property, const st
             return setStyle();
     }
 }
+
+StyleValue::DisplayType StyleValue::getDisplayType() const {
+    if (type != Type::DISPLAYVALUE) {
+        return DisplayType::BLOCK;
+    }
+    return displayType;
+}
+
+StyleValue::BorderType StyleValue::getBorderType() const {
+    if (type != Type::BORDERTYPE) {
+        return BorderType::NONE;
+    }
+    return borderType;
+}
+
+double StyleValue::getNumericValue() const {
+    if (type != Type::DOUBLE) {
+        return 0.0;
+    }
+    return numericValue;
+}
+
+uint32_t StyleValue::getColorValue() const {
+    if (type != Type::COLOR) {
+        return 0;
+    }
+    return colorValue;
+}
+
+StyleValue::LengthUnit StyleValue::getLengthUnit() const {
+    return lengthUnit;
+}
+
+StyleValue::Type StyleValue::getType() const {
+    return type;
+}
+
+template<typename T>
+std::optional<T> StyleValue::getAs() const {
+    if constexpr (std::is_same_v<T, DisplayType>) {
+        if (type == Type::DISPLAYVALUE) return displayType;
+    } else if constexpr (std::is_same_v<T, BorderType>) {
+        if (type == Type::BORDERTYPE) return borderType;
+    } else if constexpr (std::is_same_v<T, double>) {
+        if (type == Type::DOUBLE) return numericValue;
+    } else if constexpr (std::is_same_v<T, uint32_t>) {
+        if (type == Type::COLOR) return colorValue;
+    }
+    return std::nullopt;
+}
+
+bool StyleValue::isDisplayType() const { return type == Type::DISPLAYVALUE; }
+bool StyleValue::isBorderType() const { return type == Type::BORDERTYPE; }
+bool StyleValue::isNumeric() const { return type == Type::DOUBLE; }
+bool StyleValue::isColor() const { return type == Type::COLOR; }
+bool StyleValue::isUndefined() const { return type == Type::UNDEFINED; }

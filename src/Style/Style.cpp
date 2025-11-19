@@ -35,6 +35,10 @@ bool Style::setProperty(const std::string& property, const std::string& valuePro
     return true;
 }
 
+const std::unordered_map<StyleProperty, StyleValue>& Style::getMapProperty() {
+    return properties;
+}
+
 const std::unordered_map<StyleProperty, StyleValue> Style::propertiesDefault = {
     // DISPLAY - строковое значение
     {StyleProperty::DISPLAY, StyleValue::setStyleValueFromString(StyleProperty::DISPLAY, "inline")},

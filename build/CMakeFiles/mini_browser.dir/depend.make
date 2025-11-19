@@ -49,8 +49,6 @@ CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.o: ../src/Style/StyleProper
 CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.o: ../src/Style/StyleValue.cpp
 CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.o: ../src/Style/StyleValue.h
 
-CMakeFiles/mini_browser.dir/src/main.cpp.o: ../src/HTMLparser/HTMLparser.h
-CMakeFiles/mini_browser.dir/src/main.cpp.o: ../src/HTMLparser/HTMLparserGumbo.h
 CMakeFiles/mini_browser.dir/src/main.cpp.o: ../src/Node/Node.h
 CMakeFiles/mini_browser.dir/src/main.cpp.o: ../src/Style/Style.h
 CMakeFiles/mini_browser.dir/src/main.cpp.o: ../src/Style/StyleProperties.h

@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <string>
 #include <unordered_map>
+#include <optional>
 #include "StyleProperties.h"
 
 class StyleValue {
@@ -17,6 +18,7 @@ class StyleValue {
 
     private:
         Type type {Type::UNDEFINED};
+
         LengthUnit lengthUnit;
 
         DisplayType displayType;
@@ -33,9 +35,27 @@ class StyleValue {
         static StyleValue setStyle(uint32_t _value);
 
         static LengthUnit getLengthUnitFromString(const std::string& LengthUnitString);
-    
+
+        DisplayType getDisplayType() const;
+        BorderType getBorderType() const;
+        double getNumericValue() const;
+        uint32_t getColorValue() const;
+        LengthUnit getLengthUnit() const;
+
     public:
         static StyleValue setStyleValueFromString(StyleProperty property, const std::string& stringValue, const std::string& lengthUnitString_ = "");
+
+        Type getType() const;
+
+        // Универсальный геттер
+        template<typename T> std::optional<T> getAs() const;
+
+        // Проверки типа для удобства
+        bool isDisplayType() const;
+        bool isBorderType() const;
+        bool isNumeric() const;
+        bool isColor() const;
+        bool isUndefined() const;
 };
 
 #endif

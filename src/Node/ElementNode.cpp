@@ -50,3 +50,7 @@ ElementNode::Type ElementNode::getType() const { return Type::ELEMENT_NODE; }
 const std::map<std::string, std::string>& ElementNode::getAttributes() const {
     return attributes;
 }
+
+const Style& ElementNode::getStyle() const {
+    return style;
+}

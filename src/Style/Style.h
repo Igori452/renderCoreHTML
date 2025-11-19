@@ -14,6 +14,8 @@ class Style {
         StyleProperty stringToProperty(const std::string& propertyName);
     public:
         bool setProperty(const std::string& property, const std::string& valueProperty, const std::string& lengthValue = "");
+        const std::unordered_map<StyleProperty, StyleValue>& getMapProperty() const;
+        
         //bool apply(std::map<std::string, std::string>);
         //void parseMap(std::string styles) 
 };

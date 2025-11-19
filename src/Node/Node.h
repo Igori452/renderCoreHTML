@@ -7,7 +7,7 @@
 #include "../Style/Style.h"
 
 class Node {
-    protected:
+    public:
         enum class Type { ELEMENT_NODE, TEXT_NODE };
     private:
         std::string tagName;

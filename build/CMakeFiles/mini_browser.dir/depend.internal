@@ -50,8 +50,6 @@ CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.o
  /workspace/src/Style/StyleValue.cpp
  /workspace/src/Style/StyleValue.h
 CMakeFiles/mini_browser.dir/src/main.cpp.o
- /workspace/src/HTMLparser/HTMLparser.h
- /workspace/src/HTMLparser/HTMLparserGumbo.h
  /workspace/src/Node/Node.h
  /workspace/src/Style/Style.h
  /workspace/src/Style/StyleProperties.h

@@ -40,28 +40,6 @@ queue
 gumbo.h
 /workspace/src/HTMLParser/gumbo.h
 
-/workspace/src/HTMLparser/HTMLparser.h
-string
--
-cctype
--
-fstream
--
-iostream
--
-../Node/Node.h
-/workspace/src/Node/Node.h
-
-/workspace/src/HTMLparser/HTMLparserGumbo.h
-HTMLparser.h
-/workspace/src/HTMLparser/HTMLparser.h
-iostream
--
-queue
--
-gumbo.h
-/workspace/src/HTMLparser/gumbo.h
-
 /workspace/src/Node/ElementNode.cpp
 ElementNode.h
 /workspace/src/Node/ElementNode.h
@@ -128,6 +106,8 @@ cstdint
 string
 -
 unordered_map
+-
+optional
 -
 StyleProperties.h
 /workspace/src/Style/StyleProperties.h
