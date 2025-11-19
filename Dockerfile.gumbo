@@ -1,0 +1,19 @@
+# Производный образ с Gumbo
+FROM mini-browser:base
+
+RUN apt-get update && apt-get install -y \
+    wget \
+    autoconf \
+    automake \
+    libtool \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN wget -q https://github.com/google/gumbo-parser/archive/refs/tags/v0.10.1.tar.gz -O - | tar -xz \
+    && cd gumbo-parser-0.10.1 \
+    && ./autogen.sh \
+    && ./configure \
+    && make -j$(nproc) \
+    && make install \
+    && cd .. && rm -rf gumbo-parser-0.10.1
+
+RUN ldconfig

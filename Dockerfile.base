@@ -1,0 +1,16 @@
+# Базовый образ с C++ компилятором
+FROM gcc:12.2.0
+
+# Устанавливаем только системные инструменты для разработки
+RUN apt-get update && apt-get install -y \
+    cmake \
+    make \
+    build-essential \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Рабочая директория
+WORKDIR /workspace
+
+# Точка входа (интерактивный ввод)
+CMD ["/bin/bash"]
