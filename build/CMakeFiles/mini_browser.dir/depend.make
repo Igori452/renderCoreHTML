@@ -17,6 +17,28 @@ CMakeFiles/mini_browser.dir/src/HTMLParser/HTMLparserGumbo.cpp.o: ../src/Node/Te
 CMakeFiles/mini_browser.dir/src/HTMLParser/HTMLparserGumbo.cpp.o: ../src/Style/Style.h
 CMakeFiles/mini_browser.dir/src/HTMLParser/HTMLparserGumbo.cpp.o: ../src/Style/StyleProperties.h
 CMakeFiles/mini_browser.dir/src/HTMLParser/HTMLparserGumbo.cpp.o: ../src/Style/StyleValue.h
+CMakeFiles/mini_browser.dir/src/HTMLParser/HTMLparserGumbo.cpp.o: ../src/Text/TextMetrics.h
+
+CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.o: ../src/Layout/LayoutBox.cpp
+CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.o: ../src/Layout/LayoutBox.h
+CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.o: ../src/Node/ElementNode.h
+CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.o: ../src/Node/Node.h
+CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.o: ../src/Node/TextElement.h
+CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.o: ../src/Style/Style.h
+CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.o: ../src/Style/StyleProperties.h
+CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.o: ../src/Style/StyleValue.h
+CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.o: ../src/Text/TextMetrics.h
+
+CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.o: ../src/Layout/LayoutBox.h
+CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.o: ../src/Layout/LayoutEngine.cpp
+CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.o: ../src/Layout/LayoutEngine.h
+CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.o: ../src/Node/ElementNode.h
+CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.o: ../src/Node/Node.h
+CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.o: ../src/Node/TextElement.h
+CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.o: ../src/Style/Style.h
+CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.o: ../src/Style/StyleProperties.h
+CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.o: ../src/Style/StyleValue.h
+CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.o: ../src/Text/TextMetrics.h
 
 CMakeFiles/mini_browser.dir/src/Node/ElementNode.cpp.o: ../src/Node/ElementNode.cpp
 CMakeFiles/mini_browser.dir/src/Node/ElementNode.cpp.o: ../src/Node/ElementNode.h
@@ -32,13 +54,28 @@ CMakeFiles/mini_browser.dir/src/Node/Node.cpp.o: ../src/Node/TextElement.h
 CMakeFiles/mini_browser.dir/src/Node/Node.cpp.o: ../src/Style/Style.h
 CMakeFiles/mini_browser.dir/src/Node/Node.cpp.o: ../src/Style/StyleProperties.h
 CMakeFiles/mini_browser.dir/src/Node/Node.cpp.o: ../src/Style/StyleValue.h
+CMakeFiles/mini_browser.dir/src/Node/Node.cpp.o: ../src/Text/TextMetrics.h
 
+CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.o: ../src/Node/ElementNode.h
 CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.o: ../src/Node/Node.h
 CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.o: ../src/Node/TextElement.cpp
 CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.o: ../src/Node/TextElement.h
 CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.o: ../src/Style/Style.h
 CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.o: ../src/Style/StyleProperties.h
 CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.o: ../src/Style/StyleValue.h
+CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.o: ../src/Text/TextMetrics.h
+
+CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.o: ../src/Layout/LayoutBox.h
+CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.o: ../src/Node/ElementNode.h
+CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.o: ../src/Node/Node.h
+CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.o: ../src/Node/TextElement.h
+CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.o: ../src/Render/Renderer.h
+CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.o: ../src/Render/RendererSFML.cpp
+CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.o: ../src/Render/RendererSFML.h
+CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.o: ../src/Style/Style.h
+CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.o: ../src/Style/StyleProperties.h
+CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.o: ../src/Style/StyleValue.h
+CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.o: ../src/Text/TextMetrics.h
 
 CMakeFiles/mini_browser.dir/src/Style/Style.cpp.o: ../src/Style/Style.cpp
 CMakeFiles/mini_browser.dir/src/Style/Style.cpp.o: ../src/Style/Style.h
@@ -49,9 +86,19 @@ CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.o: ../src/Style/StyleProper
 CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.o: ../src/Style/StyleValue.cpp
 CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.o: ../src/Style/StyleValue.h
 
+CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.o: ../src/Text/TextMetrics.cpp
+CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.o: ../src/Text/TextMetrics.h
+
+CMakeFiles/mini_browser.dir/src/main.cpp.o: ../src/HTMLparser/HTMLparser.h
+CMakeFiles/mini_browser.dir/src/main.cpp.o: ../src/HTMLparser/HTMLparserGumbo.h
+CMakeFiles/mini_browser.dir/src/main.cpp.o: ../src/Layout/LayoutBox.h
+CMakeFiles/mini_browser.dir/src/main.cpp.o: ../src/Layout/LayoutEngine.h
+CMakeFiles/mini_browser.dir/src/main.cpp.o: ../src/Node/ElementNode.h
 CMakeFiles/mini_browser.dir/src/main.cpp.o: ../src/Node/Node.h
+CMakeFiles/mini_browser.dir/src/main.cpp.o: ../src/Node/TextElement.h
 CMakeFiles/mini_browser.dir/src/main.cpp.o: ../src/Style/Style.h
 CMakeFiles/mini_browser.dir/src/main.cpp.o: ../src/Style/StyleProperties.h
 CMakeFiles/mini_browser.dir/src/main.cpp.o: ../src/Style/StyleValue.h
+CMakeFiles/mini_browser.dir/src/main.cpp.o: ../src/Text/TextMetrics.h
 CMakeFiles/mini_browser.dir/src/main.cpp.o: ../src/main.cpp
 

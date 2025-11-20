@@ -13,7 +13,7 @@ class StyleValue {
 
         enum class Type { UNDEFINED, DISPLAYVALUE, BORDERTYPE, DOUBLE, COLOR };
 
-        enum class DisplayType { INLINE, BLOCK };
+        enum class DisplayType { INLINE, BLOCK, INLINE_BLOCK };
         enum class BorderType { NONE, SOLID, DASHED };
 
     private:
@@ -48,7 +48,19 @@ class StyleValue {
         Type getType() const;
 
         // Универсальный геттер
-        template<typename T> std::optional<T> getAs() const;
+        template<typename T>
+        std::optional<T> getAs() const {
+            if constexpr (std::is_same_v<T, DisplayType>) {
+                if (type == Type::DISPLAYVALUE) return displayType;
+            } else if constexpr (std::is_same_v<T, BorderType>) {
+                if (type == Type::BORDERTYPE) return borderType;
+            } else if constexpr (std::is_same_v<T, double>) {
+                if (type == Type::DOUBLE) return numericValue;
+            } else if constexpr (std::is_same_v<T, uint32_t>) {
+                if (type == Type::COLOR) return colorValue;
+            }
+            return std::nullopt;
+        }
 
         // Проверки типа для удобства
         bool isDisplayType() const;

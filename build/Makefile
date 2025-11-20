@@ -196,6 +196,60 @@ src/HTMLParser/HTMLparserGumbo.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_browser.dir/build.make CMakeFiles/mini_browser.dir/src/HTMLParser/HTMLparserGumbo.cpp.s
 .PHONY : src/HTMLParser/HTMLparserGumbo.cpp.s
 
+src/Layout/LayoutBox.o: src/Layout/LayoutBox.cpp.o
+
+.PHONY : src/Layout/LayoutBox.o
+
+# target to build an object file
+src/Layout/LayoutBox.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_browser.dir/build.make CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.o
+.PHONY : src/Layout/LayoutBox.cpp.o
+
+src/Layout/LayoutBox.i: src/Layout/LayoutBox.cpp.i
+
+.PHONY : src/Layout/LayoutBox.i
+
+# target to preprocess a source file
+src/Layout/LayoutBox.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_browser.dir/build.make CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.i
+.PHONY : src/Layout/LayoutBox.cpp.i
+
+src/Layout/LayoutBox.s: src/Layout/LayoutBox.cpp.s
+
+.PHONY : src/Layout/LayoutBox.s
+
+# target to generate assembly for a file
+src/Layout/LayoutBox.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_browser.dir/build.make CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.s
+.PHONY : src/Layout/LayoutBox.cpp.s
+
+src/Layout/LayoutEngine.o: src/Layout/LayoutEngine.cpp.o
+
+.PHONY : src/Layout/LayoutEngine.o
+
+# target to build an object file
+src/Layout/LayoutEngine.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_browser.dir/build.make CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.o
+.PHONY : src/Layout/LayoutEngine.cpp.o
+
+src/Layout/LayoutEngine.i: src/Layout/LayoutEngine.cpp.i
+
+.PHONY : src/Layout/LayoutEngine.i
+
+# target to preprocess a source file
+src/Layout/LayoutEngine.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_browser.dir/build.make CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.i
+.PHONY : src/Layout/LayoutEngine.cpp.i
+
+src/Layout/LayoutEngine.s: src/Layout/LayoutEngine.cpp.s
+
+.PHONY : src/Layout/LayoutEngine.s
+
+# target to generate assembly for a file
+src/Layout/LayoutEngine.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_browser.dir/build.make CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.s
+.PHONY : src/Layout/LayoutEngine.cpp.s
+
 src/Node/ElementNode.o: src/Node/ElementNode.cpp.o
 
 .PHONY : src/Node/ElementNode.o
@@ -277,6 +331,33 @@ src/Node/TextElement.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_browser.dir/build.make CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.s
 .PHONY : src/Node/TextElement.cpp.s
 
+src/Render/RendererSFML.o: src/Render/RendererSFML.cpp.o
+
+.PHONY : src/Render/RendererSFML.o
+
+# target to build an object file
+src/Render/RendererSFML.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_browser.dir/build.make CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.o
+.PHONY : src/Render/RendererSFML.cpp.o
+
+src/Render/RendererSFML.i: src/Render/RendererSFML.cpp.i
+
+.PHONY : src/Render/RendererSFML.i
+
+# target to preprocess a source file
+src/Render/RendererSFML.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_browser.dir/build.make CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.i
+.PHONY : src/Render/RendererSFML.cpp.i
+
+src/Render/RendererSFML.s: src/Render/RendererSFML.cpp.s
+
+.PHONY : src/Render/RendererSFML.s
+
+# target to generate assembly for a file
+src/Render/RendererSFML.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_browser.dir/build.make CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.s
+.PHONY : src/Render/RendererSFML.cpp.s
+
 src/Style/Style.o: src/Style/Style.cpp.o
 
 .PHONY : src/Style/Style.o
@@ -331,6 +412,33 @@ src/Style/StyleValue.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_browser.dir/build.make CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.s
 .PHONY : src/Style/StyleValue.cpp.s
 
+src/Text/TextMetrics.o: src/Text/TextMetrics.cpp.o
+
+.PHONY : src/Text/TextMetrics.o
+
+# target to build an object file
+src/Text/TextMetrics.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_browser.dir/build.make CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.o
+.PHONY : src/Text/TextMetrics.cpp.o
+
+src/Text/TextMetrics.i: src/Text/TextMetrics.cpp.i
+
+.PHONY : src/Text/TextMetrics.i
+
+# target to preprocess a source file
+src/Text/TextMetrics.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_browser.dir/build.make CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.i
+.PHONY : src/Text/TextMetrics.cpp.i
+
+src/Text/TextMetrics.s: src/Text/TextMetrics.cpp.s
+
+.PHONY : src/Text/TextMetrics.s
+
+# target to generate assembly for a file
+src/Text/TextMetrics.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_browser.dir/build.make CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.s
+.PHONY : src/Text/TextMetrics.cpp.s
+
 src/main.o: src/main.cpp.o
 
 .PHONY : src/main.o
@@ -373,6 +481,12 @@ help:
 	@echo "... src/HTMLParser/HTMLparserGumbo.o"
 	@echo "... src/HTMLParser/HTMLparserGumbo.i"
 	@echo "... src/HTMLParser/HTMLparserGumbo.s"
+	@echo "... src/Layout/LayoutBox.o"
+	@echo "... src/Layout/LayoutBox.i"
+	@echo "... src/Layout/LayoutBox.s"
+	@echo "... src/Layout/LayoutEngine.o"
+	@echo "... src/Layout/LayoutEngine.i"
+	@echo "... src/Layout/LayoutEngine.s"
 	@echo "... src/Node/ElementNode.o"
 	@echo "... src/Node/ElementNode.i"
 	@echo "... src/Node/ElementNode.s"
@@ -382,12 +496,18 @@ help:
 	@echo "... src/Node/TextElement.o"
 	@echo "... src/Node/TextElement.i"
 	@echo "... src/Node/TextElement.s"
+	@echo "... src/Render/RendererSFML.o"
+	@echo "... src/Render/RendererSFML.i"
+	@echo "... src/Render/RendererSFML.s"
 	@echo "... src/Style/Style.o"
 	@echo "... src/Style/Style.i"
 	@echo "... src/Style/Style.s"
 	@echo "... src/Style/StyleValue.o"
 	@echo "... src/Style/StyleValue.i"
 	@echo "... src/Style/StyleValue.s"
+	@echo "... src/Text/TextMetrics.o"
+	@echo "... src/Text/TextMetrics.i"
+	@echo "... src/Text/TextMetrics.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

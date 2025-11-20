@@ -12,12 +12,17 @@ class Node {
     private:
         std::string tagName;
         std::vector<Node*> childrenNode;
+        Node* parent;
     public:
         Node();
         Node(std::string tagName);
         virtual ~Node();
 
+        std::string getTagName() const;
+        Node* getParent() const;
+
         void addChild(Node* node);
+        const std::vector<Node*>& getChildren() const;
 
         void printNodes(int depth = 0);
 

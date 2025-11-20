@@ -5,16 +5,20 @@
 
 class LayoutEngine {
     private:
-        LayoutEngine* layoutBox;
         const double windowWidth = 600;
         const double windowHeight = 800;
 
-        void computeBlockELement(LayoutBox* box);
-        void computeInlineELement(LayoutBox* box);
+        void computeRootElement(LayoutBox* rootBox, double availableWidth, double availableHeight);
+        void computeBlockElement(LayoutBox* box, double parentX, double parentY, double availableWidth, double availableHeight);
+        void computeInlineElement(LayoutBox* box, double& currentLineX, double& currentLineY, double& currentLineMaxHeight, double availableWidth);
 
     public:
         LayoutBox* buildLayoutTree(Node* rootNode);
-        void computeLayoutBox(LayoutBox* box, double parentX = 0, double parentY = 0);
+        void computeLayout(LayoutBox* rootBox, double availableWidth, double availableHeight);
+        
+        double getWindowWidth() const;
+        double getWindowHeight() const;
+
 };
 
 #endif

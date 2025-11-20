@@ -102,9 +102,35 @@ CMakeFiles/mini_browser.dir/src/HTMLParser/HTMLparserGumbo.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mini_browser.dir/src/HTMLParser/HTMLparserGumbo.cpp.s"
 	/usr/local/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /workspace/src/HTMLParser/HTMLparserGumbo.cpp -o CMakeFiles/mini_browser.dir/src/HTMLParser/HTMLparserGumbo.cpp.s
 
+CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.o: CMakeFiles/mini_browser.dir/flags.make
+CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.o: ../src/Layout/LayoutBox.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/workspace/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.o"
+	/usr/local/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.o -c /workspace/src/Layout/LayoutBox.cpp
+
+CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.i"
+	/usr/local/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /workspace/src/Layout/LayoutBox.cpp > CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.i
+
+CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.s"
+	/usr/local/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /workspace/src/Layout/LayoutBox.cpp -o CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.s
+
+CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.o: CMakeFiles/mini_browser.dir/flags.make
+CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.o: ../src/Layout/LayoutEngine.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/workspace/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.o"
+	/usr/local/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.o -c /workspace/src/Layout/LayoutEngine.cpp
+
+CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.i"
+	/usr/local/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /workspace/src/Layout/LayoutEngine.cpp > CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.i
+
+CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.s"
+	/usr/local/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /workspace/src/Layout/LayoutEngine.cpp -o CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.s
+
 CMakeFiles/mini_browser.dir/src/Node/ElementNode.cpp.o: CMakeFiles/mini_browser.dir/flags.make
 CMakeFiles/mini_browser.dir/src/Node/ElementNode.cpp.o: ../src/Node/ElementNode.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/workspace/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/mini_browser.dir/src/Node/ElementNode.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/workspace/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/mini_browser.dir/src/Node/ElementNode.cpp.o"
 	/usr/local/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mini_browser.dir/src/Node/ElementNode.cpp.o -c /workspace/src/Node/ElementNode.cpp
 
 CMakeFiles/mini_browser.dir/src/Node/ElementNode.cpp.i: cmake_force
@@ -117,7 +143,7 @@ CMakeFiles/mini_browser.dir/src/Node/ElementNode.cpp.s: cmake_force
 
 CMakeFiles/mini_browser.dir/src/Node/Node.cpp.o: CMakeFiles/mini_browser.dir/flags.make
 CMakeFiles/mini_browser.dir/src/Node/Node.cpp.o: ../src/Node/Node.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/workspace/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/mini_browser.dir/src/Node/Node.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/workspace/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/mini_browser.dir/src/Node/Node.cpp.o"
 	/usr/local/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mini_browser.dir/src/Node/Node.cpp.o -c /workspace/src/Node/Node.cpp
 
 CMakeFiles/mini_browser.dir/src/Node/Node.cpp.i: cmake_force
@@ -130,7 +156,7 @@ CMakeFiles/mini_browser.dir/src/Node/Node.cpp.s: cmake_force
 
 CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.o: CMakeFiles/mini_browser.dir/flags.make
 CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.o: ../src/Node/TextElement.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/workspace/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/workspace/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.o"
 	/usr/local/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.o -c /workspace/src/Node/TextElement.cpp
 
 CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.i: cmake_force
@@ -141,9 +167,22 @@ CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.s"
 	/usr/local/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /workspace/src/Node/TextElement.cpp -o CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.s
 
+CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.o: CMakeFiles/mini_browser.dir/flags.make
+CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.o: ../src/Render/RendererSFML.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/workspace/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.o"
+	/usr/local/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.o -c /workspace/src/Render/RendererSFML.cpp
+
+CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.i"
+	/usr/local/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /workspace/src/Render/RendererSFML.cpp > CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.i
+
+CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.s"
+	/usr/local/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /workspace/src/Render/RendererSFML.cpp -o CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.s
+
 CMakeFiles/mini_browser.dir/src/Style/Style.cpp.o: CMakeFiles/mini_browser.dir/flags.make
 CMakeFiles/mini_browser.dir/src/Style/Style.cpp.o: ../src/Style/Style.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/workspace/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/mini_browser.dir/src/Style/Style.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/workspace/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/mini_browser.dir/src/Style/Style.cpp.o"
 	/usr/local/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mini_browser.dir/src/Style/Style.cpp.o -c /workspace/src/Style/Style.cpp
 
 CMakeFiles/mini_browser.dir/src/Style/Style.cpp.i: cmake_force
@@ -156,7 +195,7 @@ CMakeFiles/mini_browser.dir/src/Style/Style.cpp.s: cmake_force
 
 CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.o: CMakeFiles/mini_browser.dir/flags.make
 CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.o: ../src/Style/StyleValue.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/workspace/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/workspace/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.o"
 	/usr/local/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.o -c /workspace/src/Style/StyleValue.cpp
 
 CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.i: cmake_force
@@ -167,9 +206,22 @@ CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.s"
 	/usr/local/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /workspace/src/Style/StyleValue.cpp -o CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.s
 
+CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.o: CMakeFiles/mini_browser.dir/flags.make
+CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.o: ../src/Text/TextMetrics.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/workspace/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.o"
+	/usr/local/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.o -c /workspace/src/Text/TextMetrics.cpp
+
+CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.i"
+	/usr/local/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /workspace/src/Text/TextMetrics.cpp > CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.i
+
+CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.s"
+	/usr/local/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /workspace/src/Text/TextMetrics.cpp -o CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.s
+
 CMakeFiles/mini_browser.dir/src/main.cpp.o: CMakeFiles/mini_browser.dir/flags.make
 CMakeFiles/mini_browser.dir/src/main.cpp.o: ../src/main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/workspace/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/mini_browser.dir/src/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/workspace/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/mini_browser.dir/src/main.cpp.o"
 	/usr/local/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mini_browser.dir/src/main.cpp.o -c /workspace/src/main.cpp
 
 CMakeFiles/mini_browser.dir/src/main.cpp.i: cmake_force
@@ -184,11 +236,15 @@ CMakeFiles/mini_browser.dir/src/main.cpp.s: cmake_force
 mini_browser_OBJECTS = \
 "CMakeFiles/mini_browser.dir/src/HTMLParser/HTMLparser.cpp.o" \
 "CMakeFiles/mini_browser.dir/src/HTMLParser/HTMLparserGumbo.cpp.o" \
+"CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.o" \
+"CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.o" \
 "CMakeFiles/mini_browser.dir/src/Node/ElementNode.cpp.o" \
 "CMakeFiles/mini_browser.dir/src/Node/Node.cpp.o" \
 "CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.o" \
+"CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.o" \
 "CMakeFiles/mini_browser.dir/src/Style/Style.cpp.o" \
 "CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.o" \
+"CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.o" \
 "CMakeFiles/mini_browser.dir/src/main.cpp.o"
 
 # External object files for target mini_browser
@@ -196,16 +252,23 @@ mini_browser_EXTERNAL_OBJECTS =
 
 mini_browser: CMakeFiles/mini_browser.dir/src/HTMLParser/HTMLparser.cpp.o
 mini_browser: CMakeFiles/mini_browser.dir/src/HTMLParser/HTMLparserGumbo.cpp.o
+mini_browser: CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.o
+mini_browser: CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.o
 mini_browser: CMakeFiles/mini_browser.dir/src/Node/ElementNode.cpp.o
 mini_browser: CMakeFiles/mini_browser.dir/src/Node/Node.cpp.o
 mini_browser: CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.o
+mini_browser: CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.o
 mini_browser: CMakeFiles/mini_browser.dir/src/Style/Style.cpp.o
 mini_browser: CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.o
+mini_browser: CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.o
 mini_browser: CMakeFiles/mini_browser.dir/src/main.cpp.o
 mini_browser: CMakeFiles/mini_browser.dir/build.make
-mini_browser: /usr/local/lib/libgumbo.so
+mini_browser: /usr/local/lib/libgumbo.so.1
+mini_browser: /usr/lib/x86_64-linux-gnu/libsfml-graphics.so
+mini_browser: /usr/lib/x86_64-linux-gnu/libsfml-window.so
+mini_browser: /usr/lib/x86_64-linux-gnu/libsfml-system.so
 mini_browser: CMakeFiles/mini_browser.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/workspace/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable mini_browser"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/workspace/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Linking CXX executable mini_browser"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/mini_browser.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

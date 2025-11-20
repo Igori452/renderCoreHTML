@@ -35,13 +35,22 @@ bool Style::setProperty(const std::string& property, const std::string& valuePro
     return true;
 }
 
-const std::unordered_map<StyleProperty, StyleValue>& Style::getMapProperty() {
+const StyleValue& Style::getProperty(StyleProperty type) const {
+    auto it = properties.find(type);
+    return it != properties.end() ? it->second : propertiesDefault.find(type)->second;
+}
+
+const std::unordered_map<StyleProperty, StyleValue>& Style::getMapProperty() const {
     return properties;
+}
+
+const std::unordered_map<StyleProperty, StyleValue>& Style::getPropertiesDefault() {
+    return propertiesDefault;
 }
 
 const std::unordered_map<StyleProperty, StyleValue> Style::propertiesDefault = {
     // DISPLAY - строковое значение
-    {StyleProperty::DISPLAY, StyleValue::setStyleValueFromString(StyleProperty::DISPLAY, "inline")},
+    {StyleProperty::DISPLAY, StyleValue::setStyleValueFromString(StyleProperty::DISPLAY, "block")},
     
     // Размеры - числовые значения с "px" по умолчанию
     {StyleProperty::WIDTH, StyleValue::setStyleValueFromString(StyleProperty::WIDTH, "0", "px")},
