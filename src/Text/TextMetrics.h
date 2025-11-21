@@ -22,14 +22,11 @@ public:
     void setFontSize(double size);
     void setColor(uint32_t color);
     
-    // Основной метод - вычисляет ширину текста
     double getTextWidth(const std::string& text) const;
-    
-    // Вычисляет высоту текста (для одной строки)
     double getTextHeight(const std::string& text) const;
-    
-    // Вычисляет высоту для нескольких строк
     double getTextHeightForLines(int lineCount);
+    double getFontSize() const;
+    uint32_t getTextColor() const;
 };
 
 #endif

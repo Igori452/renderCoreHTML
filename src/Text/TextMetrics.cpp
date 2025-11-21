@@ -20,3 +20,11 @@ double TextMetrics::getTextHeight(const std::string& text) const {
 double TextMetrics::getTextHeightForLines(int lineCount) {
     return lineCount * lineHeight;
 }
+
+double TextMetrics::getFontSize() const {
+    return fontSize;
+}
+
+uint32_t TextMetrics::getTextColor() const {
+    return textColor;
+}

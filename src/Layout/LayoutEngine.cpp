@@ -171,12 +171,11 @@ void LayoutEngine::computeInlineElement(LayoutBox* box, double& currentLineX, do
             double childLineY = currentLineY;
             double childLineMaxHeight = currentLineMaxHeight;
             
-            for (auto child : box->getChildren()) {
+            for (auto child : box->getChildren()) 
                 computeInlineElement(child, childLineX, childLineY, childLineMaxHeight, availableWidth);
-                LayoutBox* childBox = dynamic_cast<LayoutBox*>(child);
-            }
             
-            // ИЗМЕНЕНИЕ: Вычисляем общую ширину как разницу между конечной и начальной позицией
+            
+            // Вычисляем общую ширину как разницу между конечной и начальной позицией
             contentWidth = childLineX - currentLineX;
             contentHeight = childLineMaxHeight;
             

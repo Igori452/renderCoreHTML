@@ -14,7 +14,6 @@ StyleProperty Style::stringToProperty(const std::string& propertyName) {
         {"padding-right", StyleProperty::PADDING_RIGHT},
         {"padding-bottom", StyleProperty::PADDING_BOTTOM},
         {"padding-left", StyleProperty::PADDING_LEFT},
-        {"border-style", StyleProperty::BORDER_STYLE},
         {"border-width", StyleProperty::BORDER_WIDTH},
         {"border-color", StyleProperty::BORDER_COLOR},
         {"color", StyleProperty::COLOR},
@@ -49,7 +48,7 @@ const std::unordered_map<StyleProperty, StyleValue>& Style::getPropertiesDefault
 }
 
 const std::unordered_map<StyleProperty, StyleValue> Style::propertiesDefault = {
-    // DISPLAY - строковое значение
+    // DISPLAY
     {StyleProperty::DISPLAY, StyleValue::setStyleValueFromString(StyleProperty::DISPLAY, "block")},
     
     // Размеры - числовые значения с "px" по умолчанию
@@ -69,11 +68,13 @@ const std::unordered_map<StyleProperty, StyleValue> Style::propertiesDefault = {
     {StyleProperty::PADDING_LEFT, StyleValue::setStyleValueFromString(StyleProperty::PADDING_LEFT, "0", "px")},
     
     // Границы
-    {StyleProperty::BORDER_STYLE, StyleValue::setStyleValueFromString(StyleProperty::BORDER_STYLE, "none")}, // строковое
     {StyleProperty::BORDER_WIDTH, StyleValue::setStyleValueFromString(StyleProperty::BORDER_WIDTH, "0", "px")}, // числовое с "px"
     {StyleProperty::BORDER_COLOR, StyleValue::setStyleValueFromString(StyleProperty::BORDER_COLOR, "black")}, // строковое
     
     // Цвета
     {StyleProperty::COLOR, StyleValue::setStyleValueFromString(StyleProperty::COLOR, "black")},
     {StyleProperty::BACKGROUND_COLOR, StyleValue::setStyleValueFromString(StyleProperty::BACKGROUND_COLOR, "transparent")},
+
+    // Текст
+    {StyleProperty::FONT_SIZE, StyleValue::setStyleValueFromString(StyleProperty::FONT_SIZE, "16", "px")},
 };

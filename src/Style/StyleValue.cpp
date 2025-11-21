@@ -13,13 +13,6 @@ StyleValue StyleValue::setStyle(DisplayType _value) {
     return styleValue;
 }
 
-StyleValue StyleValue::setStyle(BorderType _value) {
-    StyleValue styleValue;
-    styleValue.type = Type::BORDERTYPE;
-    styleValue.borderType = _value;
-    return styleValue;
-}
-
 StyleValue StyleValue::setStyle(double _value, LengthUnit lengthUnit_) {
     StyleValue styleValue;
     styleValue.type = Type::DOUBLE;
@@ -83,13 +76,6 @@ StyleValue StyleValue::setStyleValueFromString (StyleProperty property, const st
             else if (stringValue == "block") return setStyle(DisplayType::BLOCK);
             else return setStyle();
         }
-        
-        case StyleProperty::BORDER_STYLE: {
-            if (stringValue == "none") return setStyle(BorderType::NONE);
-            else if (stringValue == "solid") return setStyle(BorderType::SOLID);
-            else if (stringValue == "dashed") return setStyle(BorderType::DASHED);
-            else return setStyle();
-        }
 
         case StyleProperty::COLOR:
         case StyleProperty::BACKGROUND_COLOR:
@@ -134,13 +120,6 @@ StyleValue::DisplayType StyleValue::getDisplayType() const {
     return displayType;
 }
 
-StyleValue::BorderType StyleValue::getBorderType() const {
-    if (type != Type::BORDERTYPE) {
-        return BorderType::NONE;
-    }
-    return borderType;
-}
-
 double StyleValue::getNumericValue() const {
     if (type != Type::DOUBLE) {
         return 0.0;
@@ -164,7 +143,6 @@ StyleValue::Type StyleValue::getType() const {
 }
 
 bool StyleValue::isDisplayType() const { return type == Type::DISPLAYVALUE; }
-bool StyleValue::isBorderType() const { return type == Type::BORDERTYPE; }
 bool StyleValue::isNumeric() const { return type == Type::DOUBLE; }
 bool StyleValue::isColor() const { return type == Type::COLOR; }
 bool StyleValue::isUndefined() const { return type == Type::UNDEFINED; }

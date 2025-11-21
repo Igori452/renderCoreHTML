@@ -90,13 +90,15 @@ CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.o
  /workspace/src/Text/TextMetrics.cpp
  /workspace/src/Text/TextMetrics.h
 CMakeFiles/mini_browser.dir/src/main.cpp.o
- /workspace/src/HTMLparser/HTMLparser.h
- /workspace/src/HTMLparser/HTMLparserGumbo.h
+ /workspace/src/HTMLParser/HTMLparser.h
+ /workspace/src/HTMLParser/HTMLparserGumbo.h
  /workspace/src/Layout/LayoutBox.h
  /workspace/src/Layout/LayoutEngine.h
  /workspace/src/Node/ElementNode.h
  /workspace/src/Node/Node.h
  /workspace/src/Node/TextElement.h
+ /workspace/src/Render/Renderer.h
+ /workspace/src/Render/RendererSFML.h
  /workspace/src/Style/Style.h
  /workspace/src/Style/StyleProperties.h
  /workspace/src/Style/StyleValue.h

@@ -11,10 +11,9 @@ class StyleValue {
     public:
         enum class LengthUnit { UNDEFINED, PX };
 
-        enum class Type { UNDEFINED, DISPLAYVALUE, BORDERTYPE, DOUBLE, COLOR };
+        enum class Type { UNDEFINED, DISPLAYVALUE, DOUBLE, COLOR };
 
         enum class DisplayType { INLINE, BLOCK, INLINE_BLOCK };
-        enum class BorderType { NONE, SOLID, DASHED };
 
     private:
         Type type {Type::UNDEFINED};
@@ -22,7 +21,6 @@ class StyleValue {
         LengthUnit lengthUnit;
 
         DisplayType displayType;
-        BorderType borderType;
         double numericValue;
         uint32_t colorValue;
 
@@ -30,14 +28,12 @@ class StyleValue {
         
         static StyleValue setStyle();
         static StyleValue setStyle(DisplayType _value);
-        static StyleValue setStyle(BorderType _value);
         static StyleValue setStyle(double _value, LengthUnit lengthUnit_);
         static StyleValue setStyle(uint32_t _value);
 
         static LengthUnit getLengthUnitFromString(const std::string& LengthUnitString);
 
         DisplayType getDisplayType() const;
-        BorderType getBorderType() const;
         double getNumericValue() const;
         uint32_t getColorValue() const;
         LengthUnit getLengthUnit() const;
@@ -52,8 +48,6 @@ class StyleValue {
         std::optional<T> getAs() const {
             if constexpr (std::is_same_v<T, DisplayType>) {
                 if (type == Type::DISPLAYVALUE) return displayType;
-            } else if constexpr (std::is_same_v<T, BorderType>) {
-                if (type == Type::BORDERTYPE) return borderType;
             } else if constexpr (std::is_same_v<T, double>) {
                 if (type == Type::DOUBLE) return numericValue;
             } else if constexpr (std::is_same_v<T, uint32_t>) {
@@ -64,7 +58,6 @@ class StyleValue {
 
         // Проверки типа для удобства
         bool isDisplayType() const;
-        bool isBorderType() const;
         bool isNumeric() const;
         bool isColor() const;
         bool isUndefined() const;

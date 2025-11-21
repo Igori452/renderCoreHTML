@@ -7,6 +7,8 @@
 #include "../Style/Style.h"
 #include "Node.h"
 #include "../Style/Style.h"
+#include <algorithm>
+#include <regex>
 
 class ElementNode : public Node {
     private:

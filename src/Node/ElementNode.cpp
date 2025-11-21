@@ -5,6 +5,19 @@ ElementNode::ElementNode(std::string tagName) : Node(tagName) {};
 
 void ElementNode::setAttribute (std::string attrName, std::string attrValue) {
     if (attrName == "style") {
+        std::cout << std::endl << attrValue << std::endl;
+
+        // Удаляем все переносы строк
+        attrValue.erase(std::remove(attrValue.begin(), attrValue.end(), '\n'), attrValue.end());
+        attrValue.erase(std::remove(attrValue.begin(), attrValue.end(), '\r'), attrValue.end());
+        
+        // Заменяем множественные пробелы на одинарные
+        attrValue = std::regex_replace(attrValue, std::regex("\\s+"), " ");
+        
+        // Убираем пробелы в начале и конце
+        attrValue.erase(0, attrValue.find_first_not_of(" "));
+        attrValue.erase(attrValue.find_last_not_of(" ") + 1);
+
         std::istringstream stream(attrValue);
         std::string property;
         std::map<std::string, std::string> cssProperties;
