@@ -5,8 +5,8 @@
 
 class LayoutEngine {
     private:
-        const double windowWidth = 600;
-        const double windowHeight = 800;
+        const double windowWidth = 1280;
+        const double windowHeight = 720;
 
         void computeRootElement(LayoutBox* rootBox, double availableWidth, double availableHeight);
         void computeBlockElement(LayoutBox* box, double parentX, double parentY, double availableWidth, double availableHeight);

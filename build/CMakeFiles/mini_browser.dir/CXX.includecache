@@ -6,6 +6,28 @@
 
 #IncludeRegexTransform: 
 
+/workspace/src/HTMLParser/HTMLparser.h
+string
+-
+cctype
+-
+fstream
+-
+iostream
+-
+../Node/Node.h
+/workspace/src/Node/Node.h
+
+/workspace/src/HTMLParser/HTMLparserGumbo.h
+HTMLparser.h
+/workspace/src/HTMLParser/HTMLparser.h
+iostream
+-
+queue
+-
+gumbo.h
+/workspace/src/HTMLParser/gumbo.h
+
 /workspace/src/Layout/LayoutBox.h
 vector
 -
@@ -21,6 +43,14 @@ iostream
 -
 functional
 -
+
+/workspace/src/Layout/LayoutEngine.cpp
+LayoutEngine.h
+/workspace/src/Layout/LayoutEngine.h
+
+/workspace/src/Layout/LayoutEngine.h
+LayoutBox.h
+/workspace/src/Layout/LayoutBox.h
 
 /workspace/src/Node/ElementNode.h
 string
@@ -64,10 +94,6 @@ ElementNode.h
 ../Layout/LayoutBox.h
 /workspace/src/Layout/LayoutBox.h
 
-/workspace/src/Render/RendererSFML.cpp
-RendererSFML.h
-/workspace/src/Render/RendererSFML.h
-
 /workspace/src/Render/RendererSFML.h
 Renderer.h
 /workspace/src/Render/Renderer.h
@@ -101,4 +127,22 @@ unordered_map
 -
 vector
 -
+fstream
+-
+
+/workspace/src/main.cpp
+iostream
+-
+Node/Node.h
+/workspace/src/Node/Node.h
+Layout/LayoutBox.h
+/workspace/src/Layout/LayoutBox.h
+Layout/LayoutEngine.h
+/workspace/src/Layout/LayoutEngine.h
+Render/RendererSFML.h
+/workspace/src/Render/RendererSFML.h
+HTMLParser/HTMLparserGumbo.h
+/workspace/src/HTMLParser/HTMLparserGumbo.h
+Text/TextMetrics.h
+/workspace/src/Text/TextMetrics.h
 

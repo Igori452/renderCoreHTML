@@ -36,8 +36,29 @@ Node* HTMLparserGumbo::buildNode () {
                 root = false;
             } else queueNodes.front().second->addChild(node); 
 
-        } else if (currentNode->type == GUMBO_NODE_TEXT && !root) 
-            queueNodes.front().second->addChild(new TextElement(currentNode->v.text.text)); 
+        } else if (currentNode->type == GUMBO_NODE_TEXT && !root) {
+            // Добавляем текст обрезая лишние пробелы и отступы (trim)
+            std::string trimStr;
+            std::string textStr = currentNode->v.text.text;
+            bool inSpace = false;
+
+            for (char c : textStr) {
+                if (c == ' ' || c == '\n' || c == '\t' || c == '\r') {
+                    if (!inSpace) {
+                        trimStr.push_back(' ');
+                        inSpace = true;
+                    }
+                } else {
+                    inSpace = false;
+                    trimStr.push_back(c);
+                }
+            }
+
+            if (!trimStr.empty() && trimStr.front() == ' ') trimStr.erase(trimStr.begin());
+            if (!trimStr.empty() && trimStr.back() == ' ') trimStr.pop_back();
+
+            queueNodes.front().second->addChild(new TextElement(trimStr)); 
+        }
         
         queueNodes.pop();
         currentNode = queueNodes.front().first;

@@ -28,9 +28,13 @@ cleanup() {
 trap cleanup SIGINT SIGTERM
 
 echo "========================== Запуск Xvfb ========================== "
-Xvfb $DISPLAY -screen 0 1280x720x24 &
+Xvfb $DISPLAY -screen 0 1920x1020x24 &
 XVFB_PID=$!
 sleep 2
+
+echo "========================== Запуск Fluxbox ========================== "
+fluxbox -display :0 &
+sleep 1
 
 echo "==========================  Запуск VNC сервера ========================== "
 x11vnc -display $DISPLAY -forever -shared -nopw -listen 0.0.0.0 -rfbport 5900 &
@@ -50,6 +54,7 @@ if ! pgrep -x "x11vnc" > /dev/null; then
 fi
 
 echo "--> VNC запущен: http://localhost:8080"
+
 
 # Сборка и запуск приложения
 echo "========================== Сборка приложения ========================== "

@@ -26,16 +26,14 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
                     auto colorValue = item.second.getAs<uint32_t>().value();
 
                     // Конвертируем uint32_t в sf::Color (RGBA) и сразу применяем
-                    /*
+                    
                     elementRect.setFillColor(sf::Color(
                         (colorValue >> 24) & 0xFF,  // R
                         (colorValue >> 16) & 0xFF,  // G
                         (colorValue >> 8) & 0xFF,   // B
                         colorValue & 0xFF           // A
                     ));
-                    */
-
-                    elementRect.setFillColor(sf::Color::Transparent);
+                    
                     break;
                 }
                 case StyleProperty::BORDER_COLOR: {
@@ -68,7 +66,6 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
     }
 }
 
-
 void RendererSFML::drawText(LayoutBox& layoutBox) {
     Node* node = layoutBox.getNode();
 
@@ -84,25 +81,67 @@ void RendererSFML::drawText(LayoutBox& layoutBox) {
         double fontSize = textMetrics.getFontSize();
         uint32_t textColorValue = textMetrics.getTextColor();
         std::string textContent = textElement->getText();
+        std::string fontPath = textMetrics.getFontPath();
 
         if (!textContent.empty()) {
             // Создаем sfml текст 
             sf::Text text;
+
             text.setString(textContent);
             text.setCharacterSize(static_cast<unsigned int>(fontSize));
             
+            // Загружаем шрифт (попробуем с кэшированием)
+            static sf::Font font;
+            static bool fontLoaded = false;
+
+            if (!fontLoaded) {
+
+                std::vector<std::string> fontPaths = {
+                    "/usr/local/share/fonts/arial.ttf",
+                    "/usr/local/share/fonts/arialmt.ttf",
+                    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+                };
+
+                for (const auto& path : fontPaths) {
+                    if (font.loadFromFile(path)) {
+                        std::cout << "Font loaded: " << path << std::endl;
+                        fontLoaded = true;
+                        break;
+                    } else {
+                        std::cout << "Failed to load: " << path << std::endl;
+                    }
+                }
+
+                if (!fontLoaded) {
+                    std::cout << "ERROR: cannot load ANY font!" << std::endl;
+                }
+            }
+
+            text.setFont(font);
+            
+            // Применяем стили текста
+            if (textMetrics.isBold()) {
+                text.setStyle(sf::Text::Bold);
+            }
+            if (textMetrics.isItalic()) {
+                text.setStyle(sf::Text::Italic);
+            }
+            
             // Конвертируем цвет
-            sf::Color textColor(
-                (textColorValue >> 24) & 0xFF,  // R
-                (textColorValue >> 16) & 0xFF,  // G
-                (textColorValue >> 8) & 0xFF,   // B
-                textColorValue & 0xFF           // A
-            );
-            text.setFillColor(textColor);
+            uint8_t a = (textColorValue >> 24) & 0xFF;
+            uint8_t r = (textColorValue >> 16) & 0xFF;
+            uint8_t g = (textColorValue >> 8) & 0xFF;
+            uint8_t b = textColorValue & 0xFF;
+
+            sf::Color textColor(r, g, b, a);
             
-            // Позиционируем текст
+            // Позиционируем текст с учетом границ
+            sf::FloatRect bounds = text.getLocalBounds();
+            text.setOrigin(0, bounds.top);  // вертикальное выравнивание
             text.setPosition(x, y);
-            
+
+            text.setFillColor(sf::Color(r, g, b, 255));
+
             // Отрисовываем
             window.draw(text);
         }
@@ -131,46 +170,18 @@ void RendererSFML::renderLayoutTree(LayoutBox& layoutBox) {
     }
 }
 
-/*
-void RendererSFML::showScene(LayoutBox& rootLayoutBox) {
-    while (window.isOpen()) {
-        window.clear(sf::Color::White);
-
-        renderLayoutTree(rootLayoutBox);
-
-        window.display();
-    }
-}*/
 
 void RendererSFML::showScene(LayoutBox& rootLayoutBox) {
-    // Рисуем простейшие примитивы
-    sf::CircleShape circle(50);
-    circle.setFillColor(sf::Color::Green);
-    circle.setPosition(100, 100);
-    
-    sf::Text testText;
-    testText.setString("SFML WORKS!");
-    testText.setCharacterSize(30);
-    testText.setFillColor(sf::Color::Red);
-    testText.setPosition(200, 200);
-
     while (window.isOpen()) {
-        window.clear(sf::Color::White);
-        
-        // Рисуем тестовые объекты
-        window.draw(circle);
-        window.draw(testText);
-        
-        // НЕ рисуем наш layout вообще
-        // renderLayoutTree(rootLayoutBox);
-        
-        window.display();
-        
+
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-        
+
+        window.clear(sf::Color::White);
+        renderLayoutTree(rootLayoutBox);
+        window.display();
     }
 }

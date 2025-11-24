@@ -2,7 +2,7 @@
 
 # Сборка образа
 build:
-	docker build --target full-version -t mini-browser:full .
+	docker build --target full -t mini-browser:full .
 
 # Запуск контейнера с VNC и приложением
 run:
