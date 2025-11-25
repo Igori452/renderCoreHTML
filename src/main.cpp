@@ -6,14 +6,6 @@
 #include "HTMLParser/HTMLparserGumbo.h"
 
 int main () {
-
-    #include "Text/TextMetrics.h"
-
-    std::cout << "SFML is using DISPLAY=" << getenv("DISPLAY") << std::endl;
-
-    TextMetrics text;
-    text.setFontFromFile("../../fonts/arialmt.ttf");
-
     HTMLparserGumbo html("../htmlTests/test.html");
 
     Node* rootNode = html.parse();

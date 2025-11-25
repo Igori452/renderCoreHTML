@@ -1,21 +1,27 @@
 #include "TextMetrics.h"
 
-void TextMetrics::setAvgCharWidth(double width) { avgCharWidth = width; }
-void TextMetrics::setLineHeight(double height) { lineHeight = height; }
+// Значения как для обычного CSS (примерно)
+static constexpr double BASE_FONT_SIZE = 16.0;     // px
+static constexpr double BASE_CHAR_WIDTH = 8.0;     // px для 16px шрифта
+static constexpr double BASE_LINE_HEIGHT = 18.0;   // px для 16px шрифта
+
 void TextMetrics::setFontSize(double size) { fontSize = size; }
 void TextMetrics::setColor(uint32_t color) { textColor = color; }
 
+void TextMetrics::setFontStyleType(StyleValue::FontStyleType fontStyleType_) { 
+    fontStyleType = fontStyleType_; 
+}
+void TextMetrics::setFontWeightType(StyleValue::FontWeightType fontWeightType_) { 
+    fontWeightType = fontWeightType_; 
+}
 
-void TextMetrics::setBoldCoefficient(double coeff) { coefficients.bold = coeff; }
-void TextMetrics::setItalicCoefficient(double coeff) { coefficients.italic = coeff; }
-void TextMetrics::setCondensedCoefficient(double coeff) { coefficients.condensed = coeff; }
-void TextMetrics::setMonospaceCoefficient(double coeff) { coefficients.monospace = coeff; }
+StyleValue::FontStyleType TextMetrics::getFontStyleType() const {
+    return fontStyleType;
+}
 
-
-void TextMetrics::setBold(bool bold_) { bold = bold_; }
-void TextMetrics::setItalic(bool italic_) { italic = italic_; }
-void TextMetrics::setCondensed(bool condensed_) { condensed = condensed_; }
-void TextMetrics::setMonospace(bool monospace_) { monospace = monospace_; }
+StyleValue::FontWeightType TextMetrics::getFontWeightType() const {
+    return fontWeightType;
+}
 
 double TextMetrics::getFontSize() const { return fontSize; }
 uint32_t TextMetrics::getTextColor() const { return textColor; }
@@ -36,14 +42,48 @@ bool TextMetrics::setFontFromFile(const std::string& path) {
     return true;
 }
 
+bool TextMetrics::setFont(const std::string& fontName) {
+    std::string fontPath = "/workspace/fonts/" + fontName + ".ttf";
+    return setFontFromFile(fontPath);
+}
+
 bool TextMetrics::isFontLoaded() const { return fontLoaded; }
 std::string TextMetrics::getFontPath() const { return fontPath; }
-std::string TextMetrics::getFontFamily() const { return fontFamily; }
+
+double TextMetrics::getFontScale() const {
+    if (fontSize <= 0) return 1.0;
+    return fontSize / BASE_FONT_SIZE;
+}
+
+double TextMetrics::getStyleCoefficient() const {
+    double coeff = 1.0;
+
+    if (fontWeightType == StyleValue::FontWeightType::BOLD)
+        coeff *= coefficients.bold;
+    if (fontStyleType == StyleValue::FontStyleType::ITALIC)
+        coeff *= coefficients.italic;
+
+    return coeff;
+}
+
+// итоговая ширина символа
+double TextMetrics::getEffectiveCharWidth() const {
+    return BASE_CHAR_WIDTH * getFontScale() * getStyleCoefficient();
+}
+
+// итоговая высота строки
+double TextMetrics::getEffectiveLineHeight() const {
+    return BASE_LINE_HEIGHT * getFontScale();
+}
+
+double TextMetrics::getSingleLineWidth(const std::string& text) const {
+    if (text.empty()) return 0.0;
+    return text.length() * getEffectiveCharWidth();
+}
 
 double TextMetrics::getTextWidth(const std::string& text) const {
     if (text.empty()) return 0.0;
-    
-    // Для многострочного текста берем самую длинную строку
+
     double maxWidth = 0.0;
     size_t start = 0;
     size_t end = text.find('\n');
@@ -63,49 +103,20 @@ double TextMetrics::getTextWidth(const std::string& text) const {
 
 double TextMetrics::getTextHeight(const std::string& text) const {
     if (text.empty()) return 0.0;
-    
-    // Считаем количество строк
+
     int lineCount = 1;
     for (char c : text) {
         if (c == '\n') lineCount++;
     }
-    
+
     return getTextHeightForLines(lineCount);
 }
 
-double TextMetrics::getAdjustedCharWidth() const {
-    return avgCharWidth * getStyleCoefficient();
-}
-
-double TextMetrics::getSingleLineWidth(const std::string& text) const {
-    if (text.empty()) return 0.0;
-    
-    double adjustedWidth = getAdjustedCharWidth();
-    return text.length() * adjustedWidth;
-}
-
 double TextMetrics::getTextHeightForLines(int lineCount) const {
-    return lineCount * lineHeight;
-}
-
-int TextMetrics::estimateCharCountForWidth(double width) const {
-    double adjustedWidth = getAdjustedCharWidth();
-    return static_cast<int>(width / adjustedWidth);
-}
-
-double TextMetrics::getStyleCoefficient() const {
-    double coeff = 1.0;
-    
-    if (bold) coeff *= coefficients.bold;
-    if (italic) coeff *= coefficients.italic;
-    if (condensed) coeff *= coefficients.condensed;
-    if (monospace) coeff *= coefficients.monospace;
-    
-    return coeff;
+    return lineCount * getEffectiveLineHeight();
 }
 
 bool TextMetrics::checkFontFileExists(const std::string& path) const {
-    // Простая проверка существования файла
     std::ifstream file(path);
     return file.good();
 }
@@ -113,21 +124,10 @@ bool TextMetrics::checkFontFileExists(const std::string& path) const {
 bool TextMetrics::attemptToLoadFont(const std::string& path) {
     std::string extension = path.substr(path.find_last_of(".") + 1);
     
-    // Список поддерживаемых расширений шрифтов
-    std::vector<std::string> supportedExtensions = {
-        "ttf"
-    };
+    std::vector<std::string> supportedExtensions = { "ttf" };
     
     for (const auto& ext : supportedExtensions) {
-        if (extension == ext) {
-            return true; // Расширение поддерживается
-        }
+        if (extension == ext) return true;
     }
-    
     return false;
 }
-
-bool TextMetrics::isBold() const { return bold; }
-bool TextMetrics::isItalic() const { return italic; }
-bool TextMetrics::isCondensed() const { return condensed; }
-bool TextMetrics::isMonospace() const { return monospace; }

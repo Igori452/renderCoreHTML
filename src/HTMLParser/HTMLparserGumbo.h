@@ -12,6 +12,7 @@ class HTMLparserGumbo : public HTMLparser {
     public:
         HTMLparserGumbo();
         HTMLparserGumbo(std::string _filePath);
+        void applyMetricsRecursive(Node* node);
 };
 
 #endif

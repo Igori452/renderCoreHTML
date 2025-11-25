@@ -89,51 +89,43 @@ void RendererSFML::drawText(LayoutBox& layoutBox) {
 
             text.setString(textContent);
             text.setCharacterSize(static_cast<unsigned int>(fontSize));
-            
-            // Загружаем шрифт (попробуем с кэшированием)
-            static sf::Font font;
-            static bool fontLoaded = false;
 
-            if (!fontLoaded) {
-
-                std::vector<std::string> fontPaths = {
-                    "/usr/local/share/fonts/arial.ttf",
-                    "/usr/local/share/fonts/arialmt.ttf",
-                    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
-                };
-
-                for (const auto& path : fontPaths) {
-                    if (font.loadFromFile(path)) {
-                        std::cout << "Font loaded: " << path << std::endl;
-                        fontLoaded = true;
-                        break;
-                    } else {
-                        std::cout << "Failed to load: " << path << std::endl;
-                    }
-                }
-
-                if (!fontLoaded) {
-                    std::cout << "ERROR: cannot load ANY font!" << std::endl;
-                }
-            }
-
+            sf::Font font;
+            font.loadFromFile(fontPath);
             text.setFont(font);
-            
+
             // Применяем стили текста
-            if (textMetrics.isBold()) {
-                text.setStyle(sf::Text::Bold);
+            // Создаем базовый стиль
+            sf::Uint32 textStyle = sf::Text::Regular;
+
+            // Комбинируем FontWeightType (жирность)
+            if (textMetrics.getFontWeightType() == StyleValue::FontWeightType::BOLD)
+                textStyle |= sf::Text::Bold;
+
+            // Комбинируем FontStyleType (наклон/подчеркивание)
+            switch (textMetrics.getFontStyleType()) {
+                case StyleValue::FontStyleType::ITALIC:
+                    textStyle |= sf::Text::Italic;
+                    break;
+                case StyleValue::FontStyleType::UNDERLINED:
+                    textStyle |= sf::Text::Underlined;
+                    break;
+                case StyleValue::FontStyleType::NORMAL:
+                    // Оставляем Regular (без изменений)
+                    break;
             }
-            if (textMetrics.isItalic()) {
-                text.setStyle(sf::Text::Italic);
-            }
+
+            // Применяем комбинированный стиль
+            text.setStyle(textStyle);
             
             // Конвертируем цвет
-            uint8_t a = (textColorValue >> 24) & 0xFF;
-            uint8_t r = (textColorValue >> 16) & 0xFF;
-            uint8_t g = (textColorValue >> 8) & 0xFF;
-            uint8_t b = textColorValue & 0xFF;
+            uint8_t r = (textColorValue >> 24) & 0xFF;
+            uint8_t g = (textColorValue >> 16) & 0xFF;
+            uint8_t b = (textColorValue >> 8)  & 0xFF;
+            uint8_t a =  textColorValue        & 0xFF;
 
             sf::Color textColor(r, g, b, a);
+            text.setFillColor(textColor);
             
             // Позиционируем текст с учетом границ
             sf::FloatRect bounds = text.getLocalBounds();

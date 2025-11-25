@@ -86,6 +86,8 @@ CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.o: ../src/Style/StyleProper
 CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.o: ../src/Style/StyleValue.cpp
 CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.o: ../src/Style/StyleValue.h
 
+CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.o: ../src/Style/StyleProperties.h
+CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.o: ../src/Style/StyleValue.h
 CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.o: ../src/Text/TextMetrics.cpp
 CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.o: ../src/Text/TextMetrics.h
 

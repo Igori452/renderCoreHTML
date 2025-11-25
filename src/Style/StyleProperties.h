@@ -9,7 +9,7 @@ enum class StyleProperty {
     PADDING_TOP, PADDING_RIGHT, PADDING_BOTTOM, PADDING_LEFT,
 
     // Обработка через текстовые метрики
-    COLOR, FONT_SIZE, 
+    COLOR, FONT_SIZE, FONT_FAMILY, FONT_STYLE, FONT_WEIGHT,
 
     // Обработка со стороны графики
     BORDER_WIDTH, BORDER_COLOR,

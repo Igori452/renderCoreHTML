@@ -22,6 +22,10 @@ void Node::addChild(Node* node) {
     childrenNode.push_back(node);
 }
 
+void Node::setParent(Node* node) {
+    parent = node;
+}
+
 const std::vector<Node*>& Node::getChildren() const {
     return childrenNode;
 }

@@ -21,14 +21,13 @@ class Node {
         std::string getTagName() const;
         Node* getParent() const;
 
+        void setParent(Node* node);
         void addChild(Node* node);
         const std::vector<Node*>& getChildren() const;
 
         void printNodes(int depth = 0);
 
         Type virtual getType() const = 0;
-
-        //virtual void render (Renderer & renderer) = 0;
 };
 
 #endif

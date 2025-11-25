@@ -9,14 +9,11 @@ std::unordered_map<StyleProperty, StyleValue> TextElement::getEffectiveTextStyle
     
     // Определяем текстовые свойства
     static const std::vector<StyleProperty> textRelatedProperties = {
-        //StyleProperty::FONT_SIZE,
-        //StyleProperty::FONT_FAMILY,
-        //StyleProperty::FONT_WEIGHT,
-        //StyleProperty::COLOR,
-        //StyleProperty::LINE_HEIGHT,
-        //StyleProperty::TEXT_ALIGN,
-        //StyleProperty::LETTER_SPACING,
-        //StyleProperty::WORD_SPACING
+        StyleProperty::FONT_SIZE,
+        StyleProperty::FONT_FAMILY,
+        StyleProperty::FONT_STYLE,
+        StyleProperty::FONT_WEIGHT,
+        StyleProperty::COLOR,
     };
     
     // Для каждого текстового свойства устанавливаем значение по умолчанию или из родителя
@@ -55,11 +52,33 @@ void TextElement::applyMetrics() {
     // Применяем эффективные стили к метрикам
     auto colorIt = effectiveStyles.find(StyleProperty::COLOR);
     if (colorIt != effectiveStyles.end()) {
-        uint32_t color = colorIt->second.getAs<double>().value();
+        uint32_t color = colorIt->second.getAs<uint32_t>().value();
         textMetrics.setColor(color);
     }
-    
-    // Можно добавить применение других стилей: font-weight, line-height и т.д.
+
+    auto fontIt = effectiveStyles.find(StyleProperty::FONT_FAMILY);
+    if (fontIt != effectiveStyles.end()) {
+        auto font = fontIt->second.getAs<std::string>().value();
+        textMetrics.setFont(font);
+    }
+
+    auto fontStyleIt = effectiveStyles.find(StyleProperty::FONT_STYLE);
+    if (fontStyleIt != effectiveStyles.end()) {
+        auto fontStyle = fontStyleIt->second.getAs<StyleValue::FontStyleType>().value();
+        textMetrics.setFontStyleType(fontStyle);
+    }
+
+    auto fontWeightIt = effectiveStyles.find(StyleProperty::FONT_WEIGHT);
+    if (fontWeightIt != effectiveStyles.end()) {
+        auto fontWeight = fontWeightIt->second.getAs<StyleValue::FontWeightType>().value();
+        textMetrics.setFontWeightType(fontWeight);
+    }
+
+    auto fontSizeIt = effectiveStyles.find(StyleProperty::FONT_SIZE);
+    if (fontSizeIt != effectiveStyles.end()) {
+        auto fontSize = fontSizeIt->second.getAs<double>().value();
+        textMetrics.setFontSize(fontSize);
+    }
 }
 
 const TextMetrics& TextElement::getTextMetrics() const {

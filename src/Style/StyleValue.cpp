@@ -8,8 +8,29 @@ StyleValue StyleValue::setStyle() {
 
 StyleValue StyleValue::setStyle(DisplayType _value) {
     StyleValue styleValue;
-    styleValue.type = Type::DISPLAYVALUE;
+    styleValue.type = Type::DISPLAY;
     styleValue.displayType = _value;
+    return styleValue;
+}
+
+StyleValue StyleValue::setStyle(FontStyleType _value) {
+    StyleValue styleValue;
+    styleValue.type = Type::FONT_STYLE;
+    styleValue.fontStyleType = _value;
+    return styleValue;
+}
+
+StyleValue StyleValue::setStyle(std::string _value) {
+    StyleValue styleValue;
+    styleValue.type = Type::FONT;
+    styleValue.font = _value;
+    return styleValue;
+}
+
+StyleValue StyleValue::setStyle(FontWeightType _value) {
+    StyleValue styleValue;
+    styleValue.type = Type::FONT_WEIGHT;
+    styleValue.fontWeightType = _value;
     return styleValue;
 }
 
@@ -66,7 +87,7 @@ StyleValue::LengthUnit StyleValue::getLengthUnitFromString(const std::string& Le
     auto it = LengthUnitMap.find(LengthUnitString);
     return it != LengthUnitMap.end() ? it->second : LengthUnit::UNDEFINED;
 }
-
+#include <iostream>
 StyleValue StyleValue::setStyleValueFromString (StyleProperty property, const std::string& stringValue, const std::string& lengthUnitString_) {
 
     switch (property) {
@@ -74,6 +95,23 @@ StyleValue StyleValue::setStyleValueFromString (StyleProperty property, const st
         case StyleProperty::DISPLAY: {
             if (stringValue == "inline") return setStyle(DisplayType::INLINE);
             else if (stringValue == "block") return setStyle(DisplayType::BLOCK);
+            else return setStyle();
+        }
+
+        case StyleProperty::FONT_FAMILY: {
+            return setStyle(stringValue);
+        }
+
+        case StyleProperty::FONT_STYLE: {
+            if (stringValue == "normal") return setStyle(FontStyleType::NORMAL);
+            else if (stringValue == "italic") return setStyle(FontStyleType::ITALIC);
+            else if (stringValue == "underlined") return setStyle(FontStyleType::UNDERLINED);
+            else return setStyle();
+        }
+
+        case StyleProperty::FONT_WEIGHT: {
+            if (stringValue == "normal") return setStyle(FontWeightType::NORMAL);
+            else if (stringValue == "bold") return setStyle(FontWeightType::BOLD);
             else return setStyle();
         }
 
@@ -86,6 +124,7 @@ StyleValue StyleValue::setStyleValueFromString (StyleProperty property, const st
             else return setStyle();
         }
 
+        case StyleProperty::FONT_SIZE:
         case StyleProperty::WIDTH:
         case StyleProperty::HEIGHT:
         case StyleProperty::BORDER_WIDTH:
@@ -97,7 +136,7 @@ StyleValue StyleValue::setStyleValueFromString (StyleProperty property, const st
         case StyleProperty::PADDING_RIGHT:
         case StyleProperty::PADDING_BOTTOM:
         case StyleProperty::PADDING_LEFT: {
-            
+
             LengthUnit lengthUnit = LengthUnit::UNDEFINED;
             if (!lengthUnitString_.empty()) lengthUnit = getLengthUnitFromString(lengthUnitString_);
 
@@ -114,7 +153,7 @@ StyleValue StyleValue::setStyleValueFromString (StyleProperty property, const st
 }
 
 StyleValue::DisplayType StyleValue::getDisplayType() const {
-    if (type != Type::DISPLAYVALUE) {
+    if (type != Type::DISPLAY) {
         return DisplayType::BLOCK;
     }
     return displayType;
@@ -141,8 +180,3 @@ StyleValue::LengthUnit StyleValue::getLengthUnit() const {
 StyleValue::Type StyleValue::getType() const {
     return type;
 }
-
-bool StyleValue::isDisplayType() const { return type == Type::DISPLAYVALUE; }
-bool StyleValue::isNumeric() const { return type == Type::DOUBLE; }
-bool StyleValue::isColor() const { return type == Type::COLOR; }
-bool StyleValue::isUndefined() const { return type == Type::UNDEFINED; }

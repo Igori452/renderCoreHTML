@@ -5,65 +5,105 @@
 HTMLparserGumbo::HTMLparserGumbo() : HTMLparser() {}
 HTMLparserGumbo::HTMLparserGumbo(std::string _filePath) : HTMLparser(_filePath) {}
 
-Node* HTMLparserGumbo::buildNode () {
+Node* HTMLparserGumbo::buildNode() {
     GumboOutput* output = gumbo_parse(HTMLparser::getHtmlContent().c_str());
-    
-    std::queue<std::pair<GumboNode*, Node*>> queueNodes;
-    
-    GumboNode* currentNode = output->root;
+    GumboNode* rootGumbo = output->root;
 
-    bool root = true;
-    Node* rootNode = nullptr;
+    if (!rootGumbo || rootGumbo->type != GUMBO_NODE_ELEMENT) {
+        gumbo_destroy_output(&kGumboDefaultOptions, output);
+        return nullptr;
+    }
 
-    do {
-        if (currentNode->type == GUMBO_NODE_ELEMENT) {
-            ElementNode* node = new ElementNode(gumbo_normalized_tagname(currentNode->v.element.tag));
+    // Очередь: (GumboNode*, Node*) — (узел Gumbo, соответствующий родитель)
+    std::queue<std::pair<GumboNode*, Node*>> q;
 
-            const GumboVector* attributes = &currentNode->v.element.attributes;
-            for (unsigned int i = 0; i < attributes->length; ++i) {
-                const GumboAttribute* attribute = static_cast<GumboAttribute*>(attributes->data[i]);
-                node->setAttribute(attribute->name, attribute->value);
+    // Создаём корневой элемент
+    ElementNode* rootNode = new ElementNode(gumbo_normalized_tagname(rootGumbo->v.element.tag));
+    rootNode->setParent(nullptr);
+
+    // Добавляем всех детей корня в очередь
+    const GumboVector* rootChildren = &rootGumbo->v.element.children;
+    for (unsigned int i = 0; i < rootChildren->length; ++i) {
+        GumboNode* child = static_cast<GumboNode*>(rootChildren->data[i]);
+        q.push({child, rootNode});
+    }
+
+    // BFS построение дерева
+    while (!q.empty()) {
+        auto [gNode, parentNode] = q.front();
+        q.pop();
+
+        // ЭЛЕМЕНТ
+        if (gNode->type == GUMBO_NODE_ELEMENT) {
+
+            ElementNode* elem = new ElementNode(gumbo_normalized_tagname(gNode->v.element.tag));
+            elem->setParent(parentNode);
+            parentNode->addChild(elem);
+
+            // читаем атрибуты
+            const GumboVector* attrs = &gNode->v.element.attributes;
+            for (unsigned int i = 0; i < attrs->length; ++i) {
+                const GumboAttribute* a =
+                    static_cast<GumboAttribute*>(attrs->data[i]);
+                elem->setAttribute(a->name, a->value);
             }
 
-            const GumboVector* children = &currentNode->v.element.children;
-            for (unsigned int i = 0; i < children->length; ++i) {
-                GumboNode* child = static_cast<GumboNode*>(children->data[i]);
-                queueNodes.push(std::make_pair(child, node));
+            // ставим детей в очередь
+            const GumboVector* ch = &gNode->v.element.children;
+            for (unsigned int i = 0; i < ch->length; ++i) {
+                GumboNode* gumboChild = static_cast<GumboNode*>(ch->data[i]);
+                q.push({gumboChild, elem});
             }
+        }
 
-            if (root) {
-                rootNode = node;
-                root = false;
-            } else queueNodes.front().second->addChild(node); 
+        // ТЕКСТ
+        else if (gNode->type == GUMBO_NODE_TEXT) {
 
-        } else if (currentNode->type == GUMBO_NODE_TEXT && !root) {
-            // Добавляем текст обрезая лишние пробелы и отступы (trim)
-            std::string trimStr;
-            std::string textStr = currentNode->v.text.text;
+            std::string text = gNode->v.text.text;
+
+            // trim пробелов
+            std::string trimmed;
             bool inSpace = false;
-
-            for (char c : textStr) {
-                if (c == ' ' || c == '\n' || c == '\t' || c == '\r') {
+            for (char c : text) {
+                if (isspace(c)) {
                     if (!inSpace) {
-                        trimStr.push_back(' ');
+                        trimmed.push_back(' ');
                         inSpace = true;
                     }
                 } else {
                     inSpace = false;
-                    trimStr.push_back(c);
+                    trimmed.push_back(c);
                 }
             }
+            if (!trimmed.empty() && trimmed.front() == ' ') trimmed.erase(trimmed.begin());
+            if (!trimmed.empty() && trimmed.back() == ' ') trimmed.pop_back();
 
-            if (!trimStr.empty() && trimStr.front() == ' ') trimStr.erase(trimStr.begin());
-            if (!trimStr.empty() && trimStr.back() == ' ') trimStr.pop_back();
-
-            queueNodes.front().second->addChild(new TextElement(trimStr)); 
+            if (!trimmed.empty()) {
+                TextElement* t = new TextElement(trimmed);
+                t->setParent(parentNode);
+                parentNode->addChild(t);
+            }
         }
-        
-        queueNodes.pop();
-        currentNode = queueNodes.front().first;
-        
-    } while (!queueNodes.empty());
+    }
+
+    gumbo_destroy_output(&kGumboDefaultOptions, output);
+
+    applyMetricsRecursive(rootNode);
 
     return rootNode;
+}
+
+void HTMLparserGumbo::applyMetricsRecursive(Node* node) {
+    if (!node) return;
+
+    // Если это текстовый узел — применяем метрики
+    if (node->getType() == Node::Type::TEXT_NODE) {
+        TextElement* text = static_cast<TextElement*>(node);
+        text->applyMetrics();
+    }
+
+    // Рекурсивно обходим всех детей
+    for (Node* child : node->getChildren()) {
+        applyMetricsRecursive(child);
+    }
 }
