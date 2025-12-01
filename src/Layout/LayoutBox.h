@@ -14,6 +14,7 @@ class LayoutBox {
     private:
         double x, y;
         double width, height;
+        double margins;
 
         LayoutBox* parent;
         std::vector<LayoutBox*> children;  
@@ -31,12 +32,15 @@ class LayoutBox {
 
         void setPosition(double x_, double y_);
         void setSize(double width_, double height_);
+        void setMargins(double margins_);
 
         double getX() const;
         double getY() const;
 
         double getWidth() const;
         double getHeight() const;
+
+        double getMargins() const;
 
         void printLayoutBoxTree() const;
 };

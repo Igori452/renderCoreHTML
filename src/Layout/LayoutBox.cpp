@@ -1,7 +1,7 @@
 #include "LayoutBox.h"
 
 LayoutBox::LayoutBox(Node* node_) : 
-    x(0.0), y(0.0), width(0.0), height(0.0), parent(nullptr), node(node_) {}
+    x(0.0), y(0.0), width(0.0), height(0.0), margins(0.0), parent(nullptr), node(node_) {}
 
 void LayoutBox::addChild(LayoutBox* layoutBox) {
     layoutBox->parent = this;
@@ -26,6 +26,10 @@ void LayoutBox::setSize(double width_, double height_) {
     height = height_;
 }
 
+void LayoutBox::setMargins(double margins_) {
+    margins = margins_;
+}
+
 double LayoutBox::getX() const {
     return x;
 }
@@ -41,6 +45,10 @@ double LayoutBox::getHeight() const {
     return height;
 }
 
+double LayoutBox::getMargins() const {
+    return margins;
+}
+
 void LayoutBox::printLayoutBoxTree() const {
     // Вспомогательная лямбда для рекурсивного вывода
     std::function<void(const LayoutBox*, int)> printRecursive;
@@ -53,7 +61,7 @@ void LayoutBox::printLayoutBoxTree() const {
         
         // Простые данные блока
         std::cout << "Box (" << int(box->getNode()->getType()) << "): (" << box->x << ", " << box->y << ") ";
-        std::cout << box->width << "x" << box->height << std::endl;
+        std::cout << box->width << "x" << box->height << "(" << box->getNode()->getTagName() << ")" << std::endl;
         
         // Дети
         for (const auto& child : box->children) {

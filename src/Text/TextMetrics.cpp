@@ -2,8 +2,8 @@
 
 // Значения как для обычного CSS (примерно)
 static constexpr double BASE_FONT_SIZE = 16.0;     // px
-static constexpr double BASE_CHAR_WIDTH = 8.0;     // px для 16px шрифта
-static constexpr double BASE_LINE_HEIGHT = 18.0;   // px для 16px шрифта
+static constexpr double BASE_CHAR_WIDTH = 7.0;     // px для 16px шрифта
+static constexpr double BASE_LINE_HEIGHT = 14.0;   // px для 16px шрифта
 
 void TextMetrics::setFontSize(double size) { fontSize = size; }
 void TextMetrics::setColor(uint32_t color) { textColor = color; }
@@ -55,6 +55,18 @@ double TextMetrics::getFontScale() const {
     return fontSize / BASE_FONT_SIZE;
 }
 
+double TextMetrics::getCharWidth(char c) const {
+    double baseWidth;
+
+    auto it = charWidthTable.find(c);
+    if (it != charWidthTable.end()) {
+        baseWidth = it->second;
+    } else baseWidth = BASE_CHAR_WIDTH;
+    
+
+    return baseWidth * getFontScale() * getStyleCoefficient();
+}
+
 double TextMetrics::getStyleCoefficient() const {
     double coeff = 1.0;
 
@@ -78,7 +90,17 @@ double TextMetrics::getEffectiveLineHeight() const {
 
 double TextMetrics::getSingleLineWidth(const std::string& text) const {
     if (text.empty()) return 0.0;
-    return text.length() * getEffectiveCharWidth();
+
+    double width = 0.0;
+
+    for (char c : text)
+        width += getCharWidth(c);
+
+    auto it = charWidthTable.find(' ');
+    double spaceWidth = (it != charWidthTable.end() ? it->second : BASE_CHAR_WIDTH);
+    width += spaceWidth * getFontScale() * getStyleCoefficient() * 1.4;
+
+    return width;
 }
 
 double TextMetrics::getTextWidth(const std::string& text) const {

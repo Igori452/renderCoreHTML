@@ -19,6 +19,8 @@ class Style {
         
         const static std::unordered_map<StyleProperty, StyleValue>& getPropertiesDefault();
 
+        const std::unordered_map<StyleProperty, StyleValue> getMapPropertyMerge() const;
+
         //bool apply(std::map<std::string, std::string>);
         //void parseMap(std::string styles) 
 };

@@ -22,8 +22,8 @@ StyleValue StyleValue::setStyle(FontStyleType _value) {
 
 StyleValue StyleValue::setStyle(std::string _value) {
     StyleValue styleValue;
-    styleValue.type = Type::FONT;
-    styleValue.font = _value;
+    styleValue.type = Type::STRINGVALUE;
+    styleValue.stringValue = _value;
     return styleValue;
 }
 
@@ -87,7 +87,7 @@ StyleValue::LengthUnit StyleValue::getLengthUnitFromString(const std::string& Le
     auto it = LengthUnitMap.find(LengthUnitString);
     return it != LengthUnitMap.end() ? it->second : LengthUnit::UNDEFINED;
 }
-#include <iostream>
+
 StyleValue StyleValue::setStyleValueFromString (StyleProperty property, const std::string& stringValue, const std::string& lengthUnitString_) {
 
     switch (property) {
@@ -98,6 +98,7 @@ StyleValue StyleValue::setStyleValueFromString (StyleProperty property, const st
             else return setStyle();
         }
 
+        case StyleProperty::BACKGROUND_IMAGE:
         case StyleProperty::FONT_FAMILY: {
             return setStyle(stringValue);
         }

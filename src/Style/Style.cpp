@@ -18,6 +18,7 @@ StyleProperty Style::stringToProperty(const std::string& propertyName) {
         {"border-color", StyleProperty::BORDER_COLOR},
         {"color", StyleProperty::COLOR},
         {"background-color", StyleProperty::BACKGROUND_COLOR},
+        {"background-image", StyleProperty::BACKGROUND_IMAGE},
         {"font-size", StyleProperty::FONT_SIZE},
         {"font-family", StyleProperty::FONT_FAMILY},
         {"font-style", StyleProperty::FONT_STYLE},
@@ -41,6 +42,14 @@ bool Style::setProperty(const std::string& property, const std::string& valuePro
 const StyleValue& Style::getProperty(StyleProperty type) const {
     auto it = properties.find(type);
     return it != properties.end() ? it->second : propertiesDefault.find(type)->second;
+}
+
+// Функция гарантированно вернет значение (либо дефолтное, либо пользовательское)
+const std::unordered_map<StyleProperty, StyleValue> Style::getMapPropertyMerge() const {
+    std::unordered_map<StyleProperty, StyleValue> result = propertiesDefault;
+    for (const auto& [key, value] : properties) result[key] = value;
+    
+    return result;
 }
 
 const std::unordered_map<StyleProperty, StyleValue>& Style::getMapProperty() const {
@@ -72,12 +81,13 @@ const std::unordered_map<StyleProperty, StyleValue> Style::propertiesDefault = {
     {StyleProperty::PADDING_LEFT, StyleValue::setStyleValueFromString(StyleProperty::PADDING_LEFT, "0", "px")},
     
     // Границы
-    {StyleProperty::BORDER_WIDTH, StyleValue::setStyleValueFromString(StyleProperty::BORDER_WIDTH, "0", "px")}, // числовое с "px"
-    {StyleProperty::BORDER_COLOR, StyleValue::setStyleValueFromString(StyleProperty::BORDER_COLOR, "black")}, // строковое
+    {StyleProperty::BORDER_WIDTH, StyleValue::setStyleValueFromString(StyleProperty::BORDER_WIDTH, "0", "px")},
+    {StyleProperty::BORDER_COLOR, StyleValue::setStyleValueFromString(StyleProperty::BORDER_COLOR, "black")},
     
     // Цвета
     {StyleProperty::COLOR, StyleValue::setStyleValueFromString(StyleProperty::COLOR, "black")},
     {StyleProperty::BACKGROUND_COLOR, StyleValue::setStyleValueFromString(StyleProperty::BACKGROUND_COLOR, "transparent")},
+    {StyleProperty::BACKGROUND_IMAGE, StyleValue::setStyleValueFromString(StyleProperty::BACKGROUND_IMAGE, "")},
 
     // Текст
     {StyleProperty::FONT_SIZE, StyleValue::setStyleValueFromString(StyleProperty::FONT_SIZE, "16", "px")},

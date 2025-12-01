@@ -11,7 +11,7 @@ class StyleValue {
     public:
         enum class LengthUnit { UNDEFINED, PX };
 
-        enum class Type { UNDEFINED, DISPLAY, DOUBLE, COLOR, FONT, FONT_STYLE, FONT_WEIGHT };
+        enum class Type { UNDEFINED, DISPLAY, DOUBLE, COLOR, STRINGVALUE, FONT_STYLE, FONT_WEIGHT };
 
         enum class DisplayType { INLINE, BLOCK, INLINE_BLOCK };
 
@@ -29,7 +29,7 @@ class StyleValue {
 
         double numericValue;
         uint32_t colorValue;
-        std::string font;
+        std::string stringValue;
 
         static bool parseColor(const std::string& stringColor,  uint32_t& color);
         
@@ -67,7 +67,7 @@ class StyleValue {
             } else if constexpr (std::is_same_v<T, FontWeightType>) {
                 if (type == Type::FONT_WEIGHT) return fontWeightType;
             } else if constexpr (std::is_same_v<T, std::string>) {
-                if (type == Type::FONT) return font;
+                if (type == Type::STRINGVALUE) return stringValue;
             }
             return std::nullopt;
         }

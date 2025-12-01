@@ -9,7 +9,7 @@ class LayoutEngine {
         const double windowHeight = 720;
 
         void computeRootElement(LayoutBox* rootBox, double availableWidth, double availableHeight);
-        void computeBlockElement(LayoutBox* box, double parentX, double parentY, double availableWidth, double availableHeight);
+        void computeBlockElement(LayoutBox* box, double parentX, double parentY, double availableWidth, double& availableHeight);
         void computeInlineElement(LayoutBox* box, double& currentLineX, double& currentLineY, double& currentLineMaxHeight, double availableWidth);
 
     public:

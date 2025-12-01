@@ -10,10 +10,15 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
     double width = layoutBox.getWidth();
     double height = layoutBox.getHeight();
 
+    // Для правильной отрисовки изображений
+    bool hasBackgroundImage = false;
+    sf::Sprite backgroundSprite;
+    sf::Texture backgroundTexture;
+
     // Отрисовка блочных элементов
     if (node->getType() == Node::Type::ELEMENT_NODE) {
         ElementNode* elementNode = dynamic_cast<ElementNode*>(node);
-        auto styleMap = elementNode->getStyle().getMapProperty();
+        auto styleMap = elementNode->getStyle().getMapPropertyMerge();
 
         // Создаем прямоугольник для элемента
         sf::RectangleShape elementRect(sf::Vector2f(width, height));
@@ -22,6 +27,7 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
         // Обрабатываем стили
         for (auto& item : styleMap) {
             switch (item.first) {
+                
                 case StyleProperty::BACKGROUND_COLOR: {
                     auto colorValue = item.second.getAs<uint32_t>().value();
 
@@ -36,6 +42,7 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
                     
                     break;
                 }
+
                 case StyleProperty::BORDER_COLOR: {
                     auto colorValue = item.second.getAs<uint32_t>().value();
 
@@ -49,6 +56,7 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
 
                     break;
                 }
+
                 case StyleProperty::BORDER_WIDTH: {
                     auto borderWidthValue = item.second.getAs<double>().value();
                     // Сразу применяем толщину границы
@@ -57,12 +65,34 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
                     break;
                 }
 
+                case StyleProperty::BACKGROUND_IMAGE: {
+                    std::string fileName = item.second.getAs<std::string>().value();
+                    if (fileName.empty()) break;
+                    std::string imagePath = "/workspace/images/" + item.second.getAs<std::string>().value();
+
+
+                    if (backgroundTexture.loadFromFile(imagePath)) {
+                        backgroundSprite.setTexture(backgroundTexture);
+                        
+                        // Настраиваем размер и позицию спрайта
+                        backgroundSprite.setPosition(x, y);
+                        
+                        // Масштабируем изображение под размер элемента
+                        sf::Vector2u textureSize = backgroundTexture.getSize();
+                        float scaleX = width / textureSize.x;
+                        float scaleY = height / textureSize.y;
+                        backgroundSprite.setScale(scaleX, scaleY);
+                        hasBackgroundImage = true;
+                    }
+                }
+
                 default:
                     break;
             }
         }
         
         window.draw(elementRect);
+        if (hasBackgroundImage) window.draw(backgroundSprite);
     }
 }
 
@@ -145,8 +175,8 @@ void RendererSFML::renderLayoutTree(LayoutBox& layoutBox) {
     Node* node = layoutBox.getNode();
     
     // Сначала рисуем ВСЕ блоки
-    
-    if (node->getType() == Node::Type::ELEMENT_NODE) {
+    if (node->getType() == Node::Type::ELEMENT_NODE && 
+        dynamic_cast<ElementNode*>(node)->getStyle().getProperty(StyleProperty::DISPLAY).getAs<StyleValue::DisplayType>().value() == StyleValue::DisplayType::BLOCK) {
         drawElement(layoutBox);
     }
     
@@ -157,7 +187,8 @@ void RendererSFML::renderLayoutTree(LayoutBox& layoutBox) {
     }
     
     // И только потом рисуем текст (ПОВЕРХ блоков)
-    if (node->getType() == Node::Type::TEXT_NODE) {
+    if (node->getType() == Node::Type::TEXT_NODE || (node->getType() == Node::Type::ELEMENT_NODE &&
+        dynamic_cast<ElementNode*>(node)->getStyle().getProperty(StyleProperty::DISPLAY).getAs<StyleValue::DisplayType>().value() == StyleValue::DisplayType::INLINE)) {
         drawText(layoutBox);
     }
 }

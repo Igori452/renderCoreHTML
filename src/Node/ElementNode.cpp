@@ -1,7 +1,19 @@
 #include "ElementNode.h"
 
-ElementNode::ElementNode() : Node() {};
-ElementNode::ElementNode(std::string tagName) : Node(tagName) {};
+ElementNode::ElementNode() : Node() {}
+
+ElementNode::ElementNode(std::string tagName) : Node(tagName) {
+    // Обработка inline тегов дефолтными значениями
+    if (   tagName == "b" 
+        || tagName == "strong"
+        || tagName == "i"
+        || tagName == "span"
+        || tagName == "a") style.setProperty("display", "inline");
+
+    if (tagName == "b" || tagName == "strong") style.setProperty("font-weight", "bold");
+    if (tagName == "i") style.setProperty("font-style", "italic");
+    if (tagName == "a") style.setProperty("color", "blue");
+}
 
 void ElementNode::setAttribute (std::string attrName, std::string attrValue) {
     if (attrName == "style") {
@@ -53,7 +65,9 @@ void ElementNode::setAttribute (std::string attrName, std::string attrValue) {
                 style.setProperty(key, value, lengthUnit);                
             }
         }
-    }
+    } else if (attrName == "src" && getTagName() == "img") 
+        style.setProperty("background-image", attrValue);
+    
     
     attributes.insert({attrName, attrValue});
 }

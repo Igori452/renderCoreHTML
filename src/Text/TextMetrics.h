@@ -11,8 +11,8 @@ class TextMetrics {
 private:    
     // Коэффициенты для разных стилей текста
     struct StyleCoefficients {
-        double bold = 1.2;              // жирный текст шире на 20%
-        double italic = 1.1;            // курсив немного шире
+        double bold = 1.07;              // жирный текст шире на 20%
+        double italic = 1.02;            // курсив немного шире
     } coefficients;
     
     double fontSize;
@@ -22,6 +22,27 @@ private:
     uint32_t textColor;
     StyleValue::FontStyleType fontStyleType;
     StyleValue::FontWeightType fontWeightType;
+
+    std::unordered_map<char, double> charWidthTable = {
+        // Узкие
+        {'i', 5.2}, {'l', 5.2}, {'j', 5.0}, {'t', 6.2},
+
+        // Средние
+        {'a', 6.8}, {'c', 6.7}, {'e', 7.0}, {'o', 7.1}, {'n', 7.1},
+        {'r', 6.2}, {'s', 6.6}, {'u', 7.0}, {'v', 7.1},
+
+        // Широкие
+        {'m', 9.6}, {'w', 10.6},
+
+        // Прописные
+        {'A', 8.4}, {'B', 8.6}, {'C', 8.7}, {'D', 9.2}, {'E', 8.3},
+        {'H', 9.1}, {'M', 11.3}, {'W', 12.5},
+
+        // Пробел и пунктуация
+        {' ', 5.4}, {'.', 4.2}, {',', 4.2}, {'!', 5.1}, {'?', 7.2}
+    };
+
+    double getCharWidth(char c) const;
 
     double getStyleCoefficient() const;
     bool checkFontFileExists(const std::string& path) const;

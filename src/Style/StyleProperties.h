@@ -13,7 +13,7 @@ enum class StyleProperty {
 
     // Обработка со стороны графики
     BORDER_WIDTH, BORDER_COLOR,
-    BACKGROUND_COLOR,
+    BACKGROUND_COLOR, BACKGROUND_IMAGE,
 };
 
 #endif
