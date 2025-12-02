@@ -22,14 +22,6 @@ iostream
 functional
 -
 
-/workspace/src/Layout/LayoutEngine.cpp
-LayoutEngine.h
-/workspace/src/Layout/LayoutEngine.h
-
-/workspace/src/Layout/LayoutEngine.h
-LayoutBox.h
-/workspace/src/Layout/LayoutBox.h
-
 /workspace/src/Node/ElementNode.h
 string
 -
@@ -67,6 +59,22 @@ Node.h
 /workspace/src/Text/TextMetrics.h
 ElementNode.h
 /workspace/src/Node/ElementNode.h
+
+/workspace/src/Render/Renderer.h
+../Layout/LayoutBox.h
+/workspace/src/Layout/LayoutBox.h
+
+/workspace/src/Render/RendererSFML.cpp
+RendererSFML.h
+/workspace/src/Render/RendererSFML.h
+
+/workspace/src/Render/RendererSFML.h
+Renderer.h
+/workspace/src/Render/Renderer.h
+../Layout/LayoutBox.h
+/workspace/src/Layout/LayoutBox.h
+SFML/Graphics.hpp
+-
 
 /workspace/src/Style/Style.h
 StyleValue.h

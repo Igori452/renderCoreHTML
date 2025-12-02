@@ -95,6 +95,7 @@ StyleValue StyleValue::setStyleValueFromString (StyleProperty property, const st
         case StyleProperty::DISPLAY: {
             if (stringValue == "inline") return setStyle(DisplayType::INLINE);
             else if (stringValue == "block") return setStyle(DisplayType::BLOCK);
+            else if (stringValue == "none") return setStyle(DisplayType::NONE);
             else return setStyle();
         }
 

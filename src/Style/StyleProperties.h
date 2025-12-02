@@ -4,6 +4,7 @@
 enum class StyleProperty {
     
     // Обрабатываются на уровне координат и размеров блоков
+    // Для width и height значение 0 означает auto
     UNKNOWN, DISPLAY, WIDTH, HEIGHT, 
     MARGIN_TOP, MARGIN_RIGHT, MARGIN_BOTTOM, MARGIN_LEFT,
     PADDING_TOP, PADDING_RIGHT, PADDING_BOTTOM, PADDING_LEFT,

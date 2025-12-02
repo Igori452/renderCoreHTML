@@ -10,6 +10,12 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
     double width = layoutBox.getWidth();
     double height = layoutBox.getHeight();
 
+    float renderY = y - scrollOffset;
+    
+    // Пропуск элементов, которые не попадают на экран
+    if (renderY + height < 0 || renderY > windowHeight)
+        return;
+
     // Для правильной отрисовки изображений
     bool hasBackgroundImage = false;
     sf::Sprite backgroundSprite;
@@ -22,7 +28,7 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
 
         // Создаем прямоугольник для элемента
         sf::RectangleShape elementRect(sf::Vector2f(width, height));
-        elementRect.setPosition(x, y);
+        elementRect.setPosition(x, renderY);
 
         // Обрабатываем стили
         for (auto& item : styleMap) {
@@ -75,7 +81,7 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
                         backgroundSprite.setTexture(backgroundTexture);
                         
                         // Настраиваем размер и позицию спрайта
-                        backgroundSprite.setPosition(x, y);
+                        backgroundSprite.setPosition(x, renderY);
                         
                         // Масштабируем изображение под размер элемента
                         sf::Vector2u textureSize = backgroundTexture.getSize();
@@ -103,6 +109,12 @@ void RendererSFML::drawText(LayoutBox& layoutBox) {
     double y = layoutBox.getY();
     double width = layoutBox.getWidth();
     double height = layoutBox.getHeight();
+
+    float renderY = y - scrollOffset;
+
+    if (renderY + height < 0 || renderY > windowHeight)
+        return;
+
 
     if (node->getType() == Node::Type::TEXT_NODE) {
         TextElement* textElement = dynamic_cast<TextElement*>(node);
@@ -160,7 +172,8 @@ void RendererSFML::drawText(LayoutBox& layoutBox) {
             // Позиционируем текст с учетом границ
             sf::FloatRect bounds = text.getLocalBounds();
             text.setOrigin(0, bounds.top);  // вертикальное выравнивание
-            text.setPosition(x, y);
+            
+            text.setPosition(x, renderY);
 
             text.setFillColor(sf::Color(r, g, b, 255));
 
@@ -195,12 +208,21 @@ void RendererSFML::renderLayoutTree(LayoutBox& layoutBox) {
 
 
 void RendererSFML::showScene(LayoutBox& rootLayoutBox) {
+    contentHeight = rootLayoutBox.getHeight();
+
     while (window.isOpen()) {
 
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
+            if (event.type == sf::Event::Closed) window.close();
+
+            float maxScroll = std::max(0.f, contentHeight - windowHeight);
+
+            scrollOffset -= event.mouseWheelScroll.delta * 40.f;
+
+            if (scrollOffset < 0) scrollOffset = 0;
+            if (scrollOffset > maxScroll) scrollOffset = maxScroll;
+
         }
 
         window.clear(sf::Color::White);

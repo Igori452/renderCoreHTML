@@ -13,7 +13,7 @@ class StyleValue {
 
         enum class Type { UNDEFINED, DISPLAY, DOUBLE, COLOR, STRINGVALUE, FONT_STYLE, FONT_WEIGHT };
 
-        enum class DisplayType { INLINE, BLOCK, INLINE_BLOCK };
+        enum class DisplayType { INLINE, BLOCK, INLINE_BLOCK, NONE };
 
         enum class FontStyleType { NORMAL, ITALIC, UNDERLINED };
         enum class FontWeightType { NORMAL, BOLD };

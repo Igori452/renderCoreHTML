@@ -1,12 +1,22 @@
 #include "LayoutEngine.h"
 
 LayoutBox* LayoutEngine::buildLayoutTree(Node* rootNode) {
+    ElementNode* elementNode = dynamic_cast<ElementNode*>(rootNode);
+    
+    // Если элемент имеет display: none, не создаем для него LayoutBox
+    if (elementNode != nullptr && 
+        elementNode->getStyle().getProperty(StyleProperty::DISPLAY).getAs<StyleValue::DisplayType>().value() == StyleValue::DisplayType::NONE) {
+        return nullptr;
+    }
+    
     LayoutBox* rootBox = new LayoutBox(rootNode);
 
     // Рекурсивно строим дерево для детей
     for (const auto child : rootNode->getChildren()) {
         LayoutBox* childBox = buildLayoutTree(child);
-        rootBox->addChild(childBox);
+        if (childBox != nullptr) {
+            rootBox->addChild(childBox);
+        }
     }
 
     return rootBox;
@@ -29,12 +39,12 @@ void LayoutEngine::computeRootElement(LayoutBox* rootBox, double availableWidth,
     
     // Корневой элемент всегда занимает всю доступную область
     rootBox->setPosition(0, 0);
-    rootBox->setSize(availableWidth, availableHeight);
     
     // Обрабатываем детей корневого элемента
     double childY = 0;
     double childX = 0;
-    
+    double maxHeightContent = 0;
+
     for (auto child : rootBox->getChildren()) {
         Node* childNode = child->getNode();
         ElementNode* elementNode = dynamic_cast<ElementNode*>(childNode);
@@ -42,6 +52,7 @@ void LayoutEngine::computeRootElement(LayoutBox* rootBox, double availableWidth,
         if (elementNode != nullptr && elementNode->getStyle().getProperty(StyleProperty::DISPLAY).getAs<StyleValue::DisplayType>().value() == StyleValue::DisplayType::BLOCK) {
             computeBlockElement(child, childX, childY, availableWidth, availableHeight);
             childY += child->getHeight();
+            maxHeightContent = std::max(maxHeightContent, availableHeight);
         } else {
             double lineY = childY;
             double lineMaxHeight = 0;
@@ -49,6 +60,8 @@ void LayoutEngine::computeRootElement(LayoutBox* rootBox, double availableWidth,
             childY = lineY + lineMaxHeight;
         }
     }
+
+    rootBox->setSize(availableWidth, maxHeightContent);
 }
 
 void LayoutEngine::computeBlockElement(LayoutBox* box, double parentX, double parentY, double availableWidth, double& availableHeight) {
@@ -184,7 +197,7 @@ void LayoutEngine::computeInlineElement(LayoutBox* box, double& currentLineX, do
             double marginLeft = elementNode->getStyle().getProperty(StyleProperty::MARGIN_LEFT).getAs<double>().value();
         
             currentLineX += marginLeft;
-            currentLineY += marginTop; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            currentLineY += marginTop;
 
             // Учитываем padding
             double paddingLeft = elementNode->getStyle().getProperty(StyleProperty::PADDING_LEFT).getAs<double>().value();
