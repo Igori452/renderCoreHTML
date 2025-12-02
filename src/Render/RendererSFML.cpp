@@ -115,7 +115,6 @@ void RendererSFML::drawText(LayoutBox& layoutBox) {
     if (renderY + height < 0 || renderY > windowHeight)
         return;
 
-
     if (node->getType() == Node::Type::TEXT_NODE) {
         TextElement* textElement = dynamic_cast<TextElement*>(node);
         TextMetrics textMetrics = textElement->getTextMetrics();

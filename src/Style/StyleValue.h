@@ -9,7 +9,7 @@
 
 class StyleValue {
     public:
-        enum class LengthUnit { UNDEFINED, PX };
+        enum class LengthUnit { UNDEFINED, PX, AUTO };
 
         enum class Type { UNDEFINED, DISPLAY, DOUBLE, COLOR, STRINGVALUE, FONT_STYLE, FONT_WEIGHT };
 
@@ -46,13 +46,12 @@ class StyleValue {
         DisplayType getDisplayType() const;
         double getNumericValue() const;
         uint32_t getColorValue() const;
-        LengthUnit getLengthUnit() const;
-
     public:
         static StyleValue setStyleValueFromString(StyleProperty property, const std::string& stringValue, const std::string& lengthUnitString_ = "");
 
         Type getType() const;
-
+        LengthUnit getLengthUnit() const;
+        
         // Универсальный геттер
         template<typename T>
         std::optional<T> getAs() const {

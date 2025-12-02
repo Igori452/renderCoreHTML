@@ -29,12 +29,15 @@ StyleProperty Style::stringToProperty(const std::string& propertyName) {
     return it != propertyMap.end() ? it->second : StyleProperty::UNKNOWN;
 }
 
+#include <iostream>
 bool Style::setProperty(const std::string& property, const std::string& valueProperty, const std::string& lengthValue) {
     StyleProperty propertyObject = stringToProperty(property);
 
     if (propertyObject == StyleProperty::UNKNOWN) return false;
 
-    properties[propertyObject] = StyleValue::setStyleValueFromString(propertyObject, valueProperty, lengthValue);
+    std::cout << int(propertyObject) << std::endl;
+    if (valueProperty == "auto") properties[propertyObject] = StyleValue::setStyleValueFromString(propertyObject, "0", valueProperty);
+    else properties[propertyObject] = StyleValue::setStyleValueFromString(propertyObject, valueProperty, lengthValue);
 
     return true;
 }

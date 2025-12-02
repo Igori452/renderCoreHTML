@@ -1,7 +1,8 @@
 #include "LayoutBox.h"
 
 LayoutBox::LayoutBox(Node* node_) : 
-    x(0.0), y(0.0), width(0.0), height(0.0), margins(0.0), parent(nullptr), node(node_) {}
+    x(0.0), y(0.0), width(0.0), height(0.0), marginX(0.0), marginY(0.0), 
+    overflow(false), visibleWidth(0.0), visibleHeight(0.0), parent(nullptr), node(node_) {}
 
 void LayoutBox::addChild(LayoutBox* layoutBox) {
     layoutBox->parent = this;
@@ -24,10 +25,37 @@ void LayoutBox::setPosition(double x_, double y_) {
 void LayoutBox::setSize(double width_, double height_) {
     width = width_;
     height = height_;
+
+    visibleWidth = width_;
+    visibleHeight = height_;
 }
 
-void LayoutBox::setMargins(double margins_) {
-    margins = margins_;
+void LayoutBox::setWidth(double width_) {
+    width = width_;
+    visibleWidth = width_;
+}
+
+void LayoutBox::setHeight(double height_) {
+    height = height_;
+    visibleHeight = height_;
+}
+
+void LayoutBox::setMarginX(double margins_) {
+    marginX = margins_;
+}
+
+void LayoutBox::setMarginY(double margins_) {
+    marginY = margins_;
+}
+
+void LayoutBox::setVisibleWidth(double visibleWidth_) {
+    overflow = true;
+    visibleWidth = visibleWidth_;
+}   
+
+void LayoutBox::setVisibleHeight(double visibleHeight_) {
+    overflow = true;
+    visibleHeight = visibleHeight_;
 }
 
 double LayoutBox::getX() const {
@@ -45,8 +73,24 @@ double LayoutBox::getHeight() const {
     return height;
 }
 
-double LayoutBox::getMargins() const {
-    return margins;
+double LayoutBox::getMarginX() const {
+    return marginX;
+}
+
+double LayoutBox::getMarginY() const {
+    return marginY;
+}
+
+bool LayoutBox::isOverflow() const {
+    return overflow;
+}
+
+double LayoutBox::getVisibleWidth() const {
+    return visibleWidth;
+}
+
+double LayoutBox::getVisibleHeight() const {
+    return visibleHeight;
 }
 
 void LayoutBox::printLayoutBoxTree() const {

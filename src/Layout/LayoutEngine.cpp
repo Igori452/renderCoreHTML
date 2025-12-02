@@ -147,26 +147,43 @@ void LayoutEngine::computeBlockElement(LayoutBox* box, double parentX, double pa
         if (explicitHeight > 0) contentHeight = explicitHeight;
 
         double explicitWidth = elementNode->getStyle().getProperty(StyleProperty::WIDTH).getAs<double>().value();
-        if (explicitWidth > 0) contentWidth = std::min(explicitWidth, contentWidth);
-        
-        if (explicitWidth == 0 || explicitHeight == 0) {
-            double maxChildWidth = 0;
-            double maxChildHeight = 0;
+        if (explicitWidth > 0) {
+            contentWidth = explicitWidth;
+            // Проходим по детям и обрезаем их
             for (auto child : box->getChildren()) {
-                maxChildWidth = std::max(maxChildWidth, child->getWidth());
-                maxChildHeight += child->getHeight() + child->getMargins();
+                // Складываем левый отступ + ширину блока
+                if ((child->getWidth() + child->getX()) > contentWidth + x) {
+                    double dif = child->getWidth() + child->getX() - (contentWidth + x);
+                    child->setVisibleWidth(child->getWidth() - dif);
+                }
             }
+        }
+        
+        if (explicitWidth == 0 ||
+            elementNode->getStyle().getProperty(StyleProperty::WIDTH).getLengthUnit() == StyleValue::LengthUnit::AUTO) {
+            double maxChildWidth = 0;
+            for (auto child : box->getChildren()) maxChildWidth = std::max(maxChildWidth, child->getWidth());
             
             if (maxChildWidth > 0) contentWidth = std::min(maxChildWidth, contentWidth);
-            if (maxChildHeight > 0) contentHeight = maxChildHeight;
         }
 
+        if (explicitHeight == 0 || 
+            elementNode->getStyle().getProperty(StyleProperty::HEIGHT).getLengthUnit() == StyleValue::LengthUnit::AUTO) {
+            double maxChildHeight = 0;
+            for (auto child : box->getChildren()) maxChildHeight += (child->getHeight() + child->getMarginY());
+            
+            if (maxChildHeight > 0) contentHeight = maxChildHeight;
+        }
+        
         // 6. Устанавливаем финальный размер
         double totalWidth = contentWidth + paddingLeft + paddingRight;
         double totalHeight = contentHeight + paddingTop + paddingBottom;
 
         box->setSize(totalWidth, totalHeight);
-        box->setMargins(marginBottom + marginTop + border*2);
+
+        box->setMarginY(marginBottom + marginTop + border*2);
+        box->setMarginX(marginLeft + marginRight + border*2);
+
         availableHeight = totalHeight + marginTop + marginBottom + border*2;
     }
 }

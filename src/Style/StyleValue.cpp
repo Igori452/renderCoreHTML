@@ -81,7 +81,8 @@ bool StyleValue::parseColor(const std::string& stringColor, uint32_t& color) {
 
 StyleValue::LengthUnit StyleValue::getLengthUnitFromString(const std::string& LengthUnitString) {
     static const std::unordered_map<std::string, LengthUnit> LengthUnitMap = {
-        {"px", LengthUnit::PX},
+        { "px", LengthUnit::PX },
+        { "auto", LengthUnit::AUTO },
     };
 
     auto it = LengthUnitMap.find(LengthUnitString);
@@ -141,12 +142,14 @@ StyleValue StyleValue::setStyleValueFromString (StyleProperty property, const st
 
             LengthUnit lengthUnit = LengthUnit::UNDEFINED;
             if (!lengthUnitString_.empty()) lengthUnit = getLengthUnitFromString(lengthUnitString_);
-
-            try {
-                double numericValue = std::stod(stringValue);
-                return setStyle(numericValue, lengthUnit);
-            } catch (...) {
-                return setStyle();
+            if (lengthUnit == StyleValue::LengthUnit::AUTO) return setStyle(0.0, lengthUnit);
+            else {
+                try {
+                    double numericValue = std::stod(stringValue);
+                    return setStyle(numericValue, lengthUnit);
+                } catch (...) {
+                    return setStyle();
+                }
             }
         }
         default:

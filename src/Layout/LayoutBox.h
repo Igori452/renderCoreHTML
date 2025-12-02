@@ -14,7 +14,11 @@ class LayoutBox {
     private:
         double x, y;
         double width, height;
-        double margins;
+        double marginX, marginY;
+
+        // Добавление поддержки обрезания блоков (overflow)
+        bool overflow;
+        double visibleWidth, visibleHeight;
 
         LayoutBox* parent;
         std::vector<LayoutBox*> children;  
@@ -31,8 +35,16 @@ class LayoutBox {
         std::vector<LayoutBox*>& getChildren();
 
         void setPosition(double x_, double y_);
+
+        void setMarginX(double margins_);
+        void setMarginY(double margins_);
+
         void setSize(double width_, double height_);
-        void setMargins(double margins_);
+        void setWidth(double width_);
+        void setHeight(double height_);
+
+        void setVisibleWidth(double visibleWidth_);
+        void setVisibleHeight(double visibleHeight_);
 
         double getX() const;
         double getY() const;
@@ -40,7 +52,14 @@ class LayoutBox {
         double getWidth() const;
         double getHeight() const;
 
-        double getMargins() const;
+        double getMarginX() const;
+        double getMarginY() const;
+
+        bool isOverflow() const;
+    
+        double getVisibleWidth() const;
+        double getVisibleHeight() const;
+
 
         void printLayoutBoxTree() const;
 };
