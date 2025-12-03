@@ -12,6 +12,7 @@ class LayoutEngine {
         void computeBlockElement(LayoutBox* box, double parentX, double parentY, double availableWidth, double& availableHeight);
         void computeInlineElement(LayoutBox* box, double& currentLineX, double& currentLineY, double& currentLineMaxHeight, double availableWidth);
 
+        void clippingElements(LayoutBox* rootBox);
     public:
         LayoutBox* buildLayoutTree(Node* rootNode);
         void computeLayout(LayoutBox* rootBox, double availableWidth, double availableHeight);

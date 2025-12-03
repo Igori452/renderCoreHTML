@@ -3,6 +3,7 @@
 RendererSFML::RendererSFML() : window(sf::VideoMode(800, 600), "SFML - Mini Browser") {}
 
 void RendererSFML::drawElement(LayoutBox& layoutBox) {
+
     Node* node = layoutBox.getNode();
 
     double x = layoutBox.getX();
@@ -10,123 +11,131 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
     double width = layoutBox.getWidth();
     double height = layoutBox.getHeight();
 
+    double visibleWidth = layoutBox.getVisibleWidth();
+    double visibleHeight = layoutBox.getVisibleHeight();
+
+    if (visibleWidth == 0 || visibleHeight == 0) return;
+
     float renderY = y - scrollOffset;
-    
-    // Пропуск элементов, которые не попадают на экран
+
+    // Пропуск элементов вне экрана
     if (renderY + height < 0 || renderY > windowHeight)
         return;
-        
+
+    bool hasBackgroundImage = false;
+    sf::Sprite backgroundSprite;
+    sf::Texture backgroundTexture;
+
     if (node->getType() == Node::Type::ELEMENT_NODE) {
+
         ElementNode* elementNode = dynamic_cast<ElementNode*>(node);
         auto styleMap = elementNode->getStyle().getMapPropertyMerge();
 
-        sf::View originalView;
-        bool hasClip = false;
-        
-        // Координаты для рисования (будут меняться если есть clip)
-        float drawX = x;
-        float drawY = renderY;
-        
-        // 1. СНАЧАЛА устанавливаем view если нужно
+        // ----------------------------
+        //  Если overflow: hidden → создаём clip-буфер
+        // ----------------------------
+        sf::RenderTexture* clipBuffer = nullptr;
+
         if (layoutBox.isOverflow()) {
-            // Сохраняем текущий view
-            originalView = window.getView();
-            
-            // Создаем clip-область (ТОЛЬКО ШИРИНА И ВЫСОТА, без добавления координат!)
-            sf::FloatRect clipRect(
-                x,           // Абсолютный X
-                renderY,     // Абсолютный Y  
-                layoutBox.getVisibleWidth(),    // ШИРИНА
-                layoutBox.getVisibleHeight()    // ВЫСОТА
+            clipBuffer = new sf::RenderTexture();
+            clipBuffer->create(
+                (unsigned)layoutBox.getVisibleWidth(),
+                (unsigned)layoutBox.getVisibleHeight()
             );
-            
-            // Создаем и устанавливаем view
-            sf::View clipView(clipRect);
-            window.setView(clipView);
-            hasClip = true;
-            
-            // 2. ТЕПЕРЬ координаты меняются!
-            // В новой системе координат элемент рисуется в (0, 0)
-            drawX = 0;
-            drawY = 0;
+            clipBuffer->clear(sf::Color::Transparent);
         }
 
-        // 3. ТОЛЬКО ПОСЛЕ установки view создаем фигуру
-        // с ПРАВИЛЬНЫМИ координатами для текущей системы
+        // Выбираем, куда рисовать: окно или буфер
+        sf::RenderTarget& target = clipBuffer ? (sf::RenderTarget&)*clipBuffer : (sf::RenderTarget&)window;
+
+        // Рисуем сам прямоугольник элемента
         sf::RectangleShape elementRect(sf::Vector2f(width, height));
-        elementRect.setPosition(drawX, drawY);  // (0,0) если есть clip, иначе (x, renderY)
+
+        if (!clipBuffer)
+            elementRect.setPosition(x, renderY);
+        else
+            elementRect.setPosition(0, 0); // <<< ВАЖНО: внутри рендертекстуры (0,0)
 
         // Обрабатываем стили
         for (auto& item : styleMap) {
             switch (item.first) {
-                
+
                 case StyleProperty::BACKGROUND_COLOR: {
                     auto colorValue = item.second.getAs<uint32_t>().value();
 
-                    // Конвертируем uint32_t в sf::Color (RGBA) и сразу применяем
-                    
                     elementRect.setFillColor(sf::Color(
-                        (colorValue >> 24) & 0xFF,  // R
-                        (colorValue >> 16) & 0xFF,  // G
-                        (colorValue >> 8) & 0xFF,   // B
-                        colorValue & 0xFF           // A
+                        (colorValue >> 24) & 0xFF,
+                        (colorValue >> 16) & 0xFF,
+                        (colorValue >> 8) & 0xFF,
+                        colorValue & 0xFF
                     ));
-                    
                     break;
                 }
 
                 case StyleProperty::BORDER_COLOR: {
                     auto colorValue = item.second.getAs<uint32_t>().value();
 
-                    // Конвертируем и сразу применяем цвет границы
                     elementRect.setOutlineColor(sf::Color(
                         (colorValue >> 24) & 0xFF,
                         (colorValue >> 16) & 0xFF,
                         (colorValue >> 8) & 0xFF,
                         colorValue & 0xFF
                     ));
-
                     break;
                 }
 
                 case StyleProperty::BORDER_WIDTH: {
-                    auto borderWidthValue = item.second.getAs<double>().value();
-                    // Сразу применяем толщину границы
-                    elementRect.setOutlineThickness(static_cast<float>(borderWidthValue));
-
+                    elementRect.setOutlineThickness((float)item.second.getAs<double>().value());
                     break;
                 }
 
                 case StyleProperty::BACKGROUND_IMAGE: {
                     std::string fileName = item.second.getAs<std::string>().value();
                     if (fileName.empty()) break;
-                    std::string imagePath = "/workspace/images/" + item.second.getAs<std::string>().value();
 
+                    std::string imagePath = "/workspace/images/" + fileName;
 
                     if (backgroundTexture.loadFromFile(imagePath)) {
                         backgroundSprite.setTexture(backgroundTexture);
-                        
-                        // Настраиваем размер и позицию спрайта
-                        backgroundSprite.setPosition(x, renderY);
-                        
-                        // Масштабируем изображение под размер элемента
-                        sf::Vector2u textureSize = backgroundTexture.getSize();
-                        float scaleX = width / textureSize.x;
-                        float scaleY = height / textureSize.y;
-                        backgroundSprite.setScale(scaleX, scaleY);
                         hasBackgroundImage = true;
+
+                        if (!clipBuffer)
+                            backgroundSprite.setPosition(x, renderY);
+                        else
+                            backgroundSprite.setPosition(0, 0);
+
+                        auto size = backgroundTexture.getSize();
+                        backgroundSprite.setScale(
+                            width  / size.x,
+                            height / size.y
+                        );
                     }
+                    break;
                 }
 
-                default:
-                    break;
+                default: break;
             }
         }
-        
-        window.draw(elementRect);
-        if (hasBackgroundImage) window.draw(backgroundSprite);
 
-        if (hasClip) window.setView(originalView);
+        // Рисуем фон
+        target.draw(elementRect);
+        if (hasBackgroundImage)
+            target.draw(backgroundSprite);
+
+        // ----------------------------
+        // Если был clip → переносим в окно
+        // ----------------------------
+        if (clipBuffer) {
+
+            clipBuffer->display();
+
+            sf::Sprite clipped(clipBuffer->getTexture());
+            clipped.setPosition(x, renderY); // ставим туда, где должен быть элемент
+
+            window.draw(clipped);
+
+            delete clipBuffer;
+        }
     }
 }
 
@@ -138,77 +147,100 @@ void RendererSFML::drawText(LayoutBox& layoutBox) {
     double width = layoutBox.getWidth();
     double height = layoutBox.getHeight();
 
+    double visibleWidth = layoutBox.getVisibleWidth();
+    double visibleHeight = layoutBox.getVisibleHeight();
+
+    if (visibleWidth == 0 || visibleHeight == 0) return;
+
+
     float renderY = y - scrollOffset;
 
     if (renderY + height < 0 || renderY > windowHeight)
         return;
 
-    if (node->getType() == Node::Type::TEXT_NODE) {
-        TextElement* textElement = dynamic_cast<TextElement*>(node);
-        TextMetrics textMetrics = textElement->getTextMetrics();
+    if (node->getType() != Node::Type::TEXT_NODE)
+        return;
 
-        double fontSize = textMetrics.getFontSize();
-        uint32_t textColorValue = textMetrics.getTextColor();
-        std::string textContent = textElement->getText();
-        std::string fontPath = textMetrics.getFontPath();
+    TextElement* textElement = dynamic_cast<TextElement*>(node);
+    TextMetrics textMetrics = textElement->getTextMetrics();
 
-        if (!textContent.empty()) {
-            // Создаем sfml текст 
-            sf::Text text;
+    std::string textContent = textElement->getText();
+    if (textContent.empty()) return;
 
-            text.setString(textContent);
-            text.setCharacterSize(static_cast<unsigned int>(fontSize));
+    double fontSize = textMetrics.getFontSize();
+    uint32_t textColorValue = textMetrics.getTextColor();
+    std::string fontPath = textMetrics.getFontPath();
 
-            sf::Font font;
-            font.loadFromFile(fontPath);
-            text.setFont(font);
+    // -----------------------
+    // 1. Создаём объект текста
+    // -----------------------
+    sf::Font* font = new sf::Font();
+    font->loadFromFile(fontPath);
 
-            // Применяем стили текста
-            // Создаем базовый стиль
-            sf::Uint32 textStyle = sf::Text::Regular;
+    sf::Text text;
+    text.setString(textContent);
+    text.setCharacterSize(static_cast<unsigned int>(fontSize));
+    text.setFont(*font);
 
-            // Комбинируем FontWeightType (жирность)
-            if (textMetrics.getFontWeightType() == StyleValue::FontWeightType::BOLD)
-                textStyle |= sf::Text::Bold;
+    // Цвет
+    uint8_t r = (textColorValue >> 24) & 0xFF;
+    uint8_t g = (textColorValue >> 16) & 0xFF;
+    uint8_t b = (textColorValue >> 8)  & 0xFF;
+    uint8_t a =  textColorValue        & 0xFF;
+    text.setFillColor(sf::Color(r,g,b,a));
 
-            // Комбинируем FontStyleType (наклон/подчеркивание)
-            switch (textMetrics.getFontStyleType()) {
-                case StyleValue::FontStyleType::ITALIC:
-                    textStyle |= sf::Text::Italic;
-                    break;
-                case StyleValue::FontStyleType::UNDERLINED:
-                    textStyle |= sf::Text::Underlined;
-                    break;
-                case StyleValue::FontStyleType::NORMAL:
-                    // Оставляем Regular (без изменений)
-                    break;
-            }
+    // Стиль
+    sf::Uint32 style = sf::Text::Regular;
+    if (textMetrics.getFontWeightType() == StyleValue::FontWeightType::BOLD) style |= sf::Text::Bold;
+    if (textMetrics.getFontStyleType()  == StyleValue::FontStyleType::ITALIC) style |= sf::Text::Italic;
+    if (textMetrics.getFontStyleType()  == StyleValue::FontStyleType::UNDERLINED) style |= sf::Text::Underlined;
 
-            // Применяем комбинированный стиль
-            text.setStyle(textStyle);
-            
-            // Конвертируем цвет
-            uint8_t r = (textColorValue >> 24) & 0xFF;
-            uint8_t g = (textColorValue >> 16) & 0xFF;
-            uint8_t b = (textColorValue >> 8)  & 0xFF;
-            uint8_t a =  textColorValue        & 0xFF;
+    text.setStyle(style);
 
-            sf::Color textColor(r, g, b, a);
-            text.setFillColor(textColor);
-            
-            // Позиционируем текст с учетом границ
-            sf::FloatRect bounds = text.getLocalBounds();
-            text.setOrigin(0, bounds.top);  // вертикальное выравнивание
-            
-            text.setPosition(x, renderY);
+    // Корректировка вертикального оффсета
+    sf::FloatRect bounds = text.getLocalBounds();
+    text.setOrigin(0, bounds.top);
 
-            text.setFillColor(sf::Color(r, g, b, 255));
+    // -----------------------
+    // 2. Проверяем overflow
+    // -----------------------
+    bool clip = layoutBox.isOverflow();
 
-            // Отрисовываем
-            window.draw(text);
-        }
+    if (!clip) {
+        // Без обрезания — обычный вывод
+        text.setPosition(x, renderY);
+        window.draw(text);
+        delete font;
+        return;
     }
+
+    // -----------------------
+    // 3. Рендерим текст в clip-buffer
+    // -----------------------
+    unsigned clipW = (unsigned)layoutBox.getVisibleWidth();
+    unsigned clipH = (unsigned)layoutBox.getVisibleHeight();
+
+    sf::RenderTexture clipBuffer;
+    clipBuffer.create(clipW, clipH);
+    clipBuffer.clear(sf::Color::Transparent);
+
+    // Позиция внутри буфера всегда (0,0)
+    text.setPosition(0, 0);
+
+    clipBuffer.draw(text);
+    clipBuffer.display();
+
+    // -----------------------
+    // 4. Переносим в окно
+    // -----------------------
+    sf::Sprite clipped(clipBuffer.getTexture());
+    clipped.setPosition(x, renderY);
+
+    window.draw(clipped);
+
+    delete font;
 }
+
 
 // Рекурсивная функция обхода дерева LayoutBox
 void RendererSFML::renderLayoutTree(LayoutBox& layoutBox) {
@@ -232,7 +264,6 @@ void RendererSFML::renderLayoutTree(LayoutBox& layoutBox) {
         drawText(layoutBox);
     }
 }
-
 
 void RendererSFML::showScene(LayoutBox& rootLayoutBox) {
     contentHeight = rootLayoutBox.getHeight();

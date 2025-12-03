@@ -37,6 +37,9 @@ void LayoutEngine::computeLayout(LayoutBox* rootBox, double availableWidth, doub
 void LayoutEngine::computeRootElement(LayoutBox* rootBox, double availableWidth, double availableHeight) {
     Node* rootNode = rootBox->getNode();
     
+    //!!!!!!!!!!!!!!!!!!!!! Нужно добавить особую обработку html, head, body чтобы они не брали ширину минимальных блоков
+    // так как они начинаются с 0 0; делать их на всю ширину экрана;
+
     // Корневой элемент всегда занимает всю доступную область
     rootBox->setPosition(0, 0);
     
@@ -62,6 +65,34 @@ void LayoutEngine::computeRootElement(LayoutBox* rootBox, double availableWidth,
     }
 
     rootBox->setSize(availableWidth, maxHeightContent);
+
+    clippingElements(rootBox);
+}
+
+void LayoutEngine::clippingElements(LayoutBox* box) {
+    // Проверяем наличие явной ширины
+    double contentWidth = box->getVisibleWidth();
+    
+    std::cout << "sdsdsdddddddddddddddddddddddddddddddddddd" << contentWidth << std::endl;
+    // Проверяем, нужно ли применять обрезку
+    if (contentWidth > 0) {
+        // Проходим по детям и обрезаем их
+        for (auto child : box->getChildren()) {
+            // Проверяем, выходит ли элемент за границы родителя
+            double childRightEdge = child->getX() + child->getVisibleWidth();
+            double parentRightEdge = box->getX() + contentWidth;
+            
+            if (childRightEdge > parentRightEdge) {
+                double overflow = childRightEdge - parentRightEdge;
+                // Уменьшаем видимую ширину, но не меньше 0
+                double newVisibleWidth = std::max(0.0, child->getVisibleWidth() - overflow);
+                child->setVisibleWidth(newVisibleWidth);
+            }
+
+            clippingElements(child);
+        }
+    }
+
 }
 
 void LayoutEngine::computeBlockElement(LayoutBox* box, double parentX, double parentY, double availableWidth, double& availableHeight) {
@@ -147,18 +178,10 @@ void LayoutEngine::computeBlockElement(LayoutBox* box, double parentX, double pa
         if (explicitHeight > 0) contentHeight = explicitHeight;
 
         double explicitWidth = elementNode->getStyle().getProperty(StyleProperty::WIDTH).getAs<double>().value();
-        if (explicitWidth > 0) {
-            contentWidth = explicitWidth;
-            // Проходим по детям и обрезаем их
-            for (auto child : box->getChildren()) {
-                // Складываем левый отступ + ширину блока
-                if ((child->getWidth() + child->getX()) > contentWidth + x) {
-                    double dif = child->getWidth() + child->getX() - (contentWidth + x);
-                    child->setVisibleWidth(child->getWidth() - dif);
-                    std::cout << "VISIBLEWIDTH: " << child->getVisibleWidth() << "; isOverflow: " << child->isOverflow() << std::endl;
-                }
-            }
-        }
+
+        std::cout << "explicitWidth: " <<  explicitWidth << " " << elementNode->getTagName() << std::endl;
+
+        if (explicitWidth > 0) contentWidth = explicitWidth;
         
         if (explicitWidth == 0 ||
             elementNode->getStyle().getProperty(StyleProperty::WIDTH).getLengthUnit() == StyleValue::LengthUnit::AUTO) {
