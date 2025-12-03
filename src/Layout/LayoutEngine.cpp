@@ -155,6 +155,7 @@ void LayoutEngine::computeBlockElement(LayoutBox* box, double parentX, double pa
                 if ((child->getWidth() + child->getX()) > contentWidth + x) {
                     double dif = child->getWidth() + child->getX() - (contentWidth + x);
                     child->setVisibleWidth(child->getWidth() - dif);
+                    std::cout << "VISIBLEWIDTH: " << child->getVisibleWidth() << "; isOverflow: " << child->isOverflow() << std::endl;
                 }
             }
         }

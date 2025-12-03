@@ -15,20 +15,46 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
     // Пропуск элементов, которые не попадают на экран
     if (renderY + height < 0 || renderY > windowHeight)
         return;
-
-    // Для правильной отрисовки изображений
-    bool hasBackgroundImage = false;
-    sf::Sprite backgroundSprite;
-    sf::Texture backgroundTexture;
-
-    // Отрисовка блочных элементов
+        
     if (node->getType() == Node::Type::ELEMENT_NODE) {
         ElementNode* elementNode = dynamic_cast<ElementNode*>(node);
         auto styleMap = elementNode->getStyle().getMapPropertyMerge();
 
-        // Создаем прямоугольник для элемента
+        sf::View originalView;
+        bool hasClip = false;
+        
+        // Координаты для рисования (будут меняться если есть clip)
+        float drawX = x;
+        float drawY = renderY;
+        
+        // 1. СНАЧАЛА устанавливаем view если нужно
+        if (layoutBox.isOverflow()) {
+            // Сохраняем текущий view
+            originalView = window.getView();
+            
+            // Создаем clip-область (ТОЛЬКО ШИРИНА И ВЫСОТА, без добавления координат!)
+            sf::FloatRect clipRect(
+                x,           // Абсолютный X
+                renderY,     // Абсолютный Y  
+                layoutBox.getVisibleWidth(),    // ШИРИНА
+                layoutBox.getVisibleHeight()    // ВЫСОТА
+            );
+            
+            // Создаем и устанавливаем view
+            sf::View clipView(clipRect);
+            window.setView(clipView);
+            hasClip = true;
+            
+            // 2. ТЕПЕРЬ координаты меняются!
+            // В новой системе координат элемент рисуется в (0, 0)
+            drawX = 0;
+            drawY = 0;
+        }
+
+        // 3. ТОЛЬКО ПОСЛЕ установки view создаем фигуру
+        // с ПРАВИЛЬНЫМИ координатами для текущей системы
         sf::RectangleShape elementRect(sf::Vector2f(width, height));
-        elementRect.setPosition(x, renderY);
+        elementRect.setPosition(drawX, drawY);  // (0,0) если есть clip, иначе (x, renderY)
 
         // Обрабатываем стили
         for (auto& item : styleMap) {
@@ -99,6 +125,8 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
         
         window.draw(elementRect);
         if (hasBackgroundImage) window.draw(backgroundSprite);
+
+        if (hasClip) window.setView(originalView);
     }
 }
 
@@ -185,7 +213,7 @@ void RendererSFML::drawText(LayoutBox& layoutBox) {
 // Рекурсивная функция обхода дерева LayoutBox
 void RendererSFML::renderLayoutTree(LayoutBox& layoutBox) {
     Node* node = layoutBox.getNode();
-    
+
     // Сначала рисуем ВСЕ блоки
     if (node->getType() == Node::Type::ELEMENT_NODE && 
         dynamic_cast<ElementNode*>(node)->getStyle().getProperty(StyleProperty::DISPLAY).getAs<StyleValue::DisplayType>().value() == StyleValue::DisplayType::BLOCK) {
