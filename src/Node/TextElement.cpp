@@ -14,6 +14,7 @@ std::unordered_map<StyleProperty, StyleValue> TextElement::getEffectiveTextStyle
         StyleProperty::FONT_STYLE,
         StyleProperty::FONT_WEIGHT,
         StyleProperty::COLOR,
+        StyleProperty::FONT_DECORATION,
     };
     
     // Для каждого текстового свойства устанавливаем значение по умолчанию или из родителя
@@ -78,6 +79,12 @@ void TextElement::applyMetrics() {
     if (fontSizeIt != effectiveStyles.end()) {
         auto fontSize = fontSizeIt->second.getAs<double>().value();
         textMetrics.setFontSize(fontSize);
+    }
+
+    auto fontDecorationIt = effectiveStyles.find(StyleProperty::FONT_DECORATION);
+    if (fontDecorationIt != effectiveStyles.end()) {
+        auto fontDecoration = fontDecorationIt->second.getAs<StyleValue::FontDecorationType>().value();
+        textMetrics.setFontDecorationType(fontDecoration);
     }
 }
 

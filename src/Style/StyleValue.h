@@ -11,12 +11,13 @@ class StyleValue {
     public:
         enum class LengthUnit { UNDEFINED, PX, AUTO };
 
-        enum class Type { UNDEFINED, DISPLAY, DOUBLE, COLOR, STRINGVALUE, FONT_STYLE, FONT_WEIGHT };
+        enum class Type { UNDEFINED, DISPLAY, DOUBLE, COLOR, STRINGVALUE, FONT_STYLE, FONT_WEIGHT, FONT_DECORATION };
 
-        enum class DisplayType { INLINE, BLOCK, INLINE_BLOCK, NONE };
+        enum class DisplayType { INLINE, BLOCK, NONE };
 
-        enum class FontStyleType { NORMAL, ITALIC, UNDERLINED };
+        enum class FontStyleType { NORMAL, ITALIC };
         enum class FontWeightType { NORMAL, BOLD };
+        enum class FontDecorationType { NORMAL, UNDERLINED, LINE_THROUGH };
 
     private:
         Type type {Type::UNDEFINED};
@@ -26,6 +27,7 @@ class StyleValue {
         DisplayType displayType;
         FontStyleType fontStyleType;
         FontWeightType fontWeightType;
+        FontDecorationType fontDecorationType;
 
         double numericValue;
         uint32_t colorValue;
@@ -37,6 +39,7 @@ class StyleValue {
         static StyleValue setStyle(DisplayType _value);
         static StyleValue setStyle(FontStyleType _value);
         static StyleValue setStyle(FontWeightType _value);
+        static StyleValue setStyle(FontDecorationType _value);
         static StyleValue setStyle(std::string _value);
         static StyleValue setStyle(double _value, LengthUnit lengthUnit_);
         static StyleValue setStyle(uint32_t _value);
@@ -67,6 +70,8 @@ class StyleValue {
                 if (type == Type::FONT_WEIGHT) return fontWeightType;
             } else if constexpr (std::is_same_v<T, std::string>) {
                 if (type == Type::STRINGVALUE) return stringValue;
+            }  else if constexpr (std::is_same_v<T, FontDecorationType>) {
+                if (type == Type::FONT_DECORATION) return fontDecorationType;
             }
             return std::nullopt;
         }

@@ -2,7 +2,8 @@
 
 LayoutBox::LayoutBox(Node* node_) : 
     x(0.0), y(0.0), width(0.0), height(0.0), marginX(0.0), marginY(0.0), 
-    overflow(false), visibleWidth(0.0), visibleHeight(0.0), parent(nullptr), node(node_) {}
+    overflow(false), visibleWidth(0.0), visibleHeight(0.0), 
+    dynamicBorderX(0), dynamicBorderY(0), parent(nullptr), node(node_) {}
 
 void LayoutBox::addChild(LayoutBox* layoutBox) {
     layoutBox->parent = this;
@@ -85,6 +86,10 @@ bool LayoutBox::isOverflow() const {
     return overflow;
 }
 
+void LayoutBox::setOverflow(bool overflow_) {
+    overflow = overflow_;
+}
+
 double LayoutBox::getVisibleWidth() const {
     return visibleWidth;
 }
@@ -92,6 +97,25 @@ double LayoutBox::getVisibleWidth() const {
 double LayoutBox::getVisibleHeight() const {
     return visibleHeight;
 }
+
+void LayoutBox::setDynamicBorderX(int border_) {
+    dynamicBorderX = border_;
+    overflow = true;
+}
+
+void LayoutBox::setDynamicBorderY(int border_) {
+    dynamicBorderY = border_;
+    overflow = true;
+}
+
+int LayoutBox::getDynamicBorderX() const {
+    return dynamicBorderX;
+}
+
+int LayoutBox::getDynamicBorderY() const {
+    return dynamicBorderY;
+}
+
 
 void LayoutBox::printLayoutBoxTree() const {
     // Вспомогательная лямбда для рекурсивного вывода
@@ -106,7 +130,7 @@ void LayoutBox::printLayoutBoxTree() const {
         // Простые данные блока
         std::cout << "Box (" << int(box->getNode()->getType()) << "): (" << box->x << ", " << box->y << ") ";
         std::cout << box->width << "x" << box->height << "(" << box->getNode()->getTagName() << "); visibleWidth: "
-        << box->visibleWidth << "; visibleHeight: " << box->visibleHeight << std::endl;
+        << box->visibleWidth << "; visibleHeight: " << box->visibleHeight << "; " << std::endl;
         
         // Дети
         for (const auto& child : box->children) printRecursive(child, depth + 1);

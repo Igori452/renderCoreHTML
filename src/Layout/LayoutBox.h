@@ -15,6 +15,7 @@ class LayoutBox {
         double x, y;
         double width, height;
         double marginX, marginY;
+        int dynamicBorderX, dynamicBorderY;
 
         // Добавление поддержки обрезания блоков (overflow)
         bool overflow;
@@ -46,6 +47,9 @@ class LayoutBox {
         void setVisibleWidth(double visibleWidth_);
         void setVisibleHeight(double visibleHeight_);
 
+        void setDynamicBorderX(int border_);
+        void setDynamicBorderY(int border_);
+
         double getX() const;
         double getY() const;
 
@@ -56,10 +60,13 @@ class LayoutBox {
         double getMarginY() const;
 
         bool isOverflow() const;
+        void setOverflow(bool overflow_);
     
         double getVisibleWidth() const;
         double getVisibleHeight() const;
 
+        int getDynamicBorderX() const;
+        int getDynamicBorderY() const;
 
         void printLayoutBoxTree() const;
 };

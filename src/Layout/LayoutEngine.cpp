@@ -37,9 +37,6 @@ void LayoutEngine::computeLayout(LayoutBox* rootBox, double availableWidth, doub
 void LayoutEngine::computeRootElement(LayoutBox* rootBox, double availableWidth, double availableHeight) {
     Node* rootNode = rootBox->getNode();
     
-    //!!!!!!!!!!!!!!!!!!!!! Нужно добавить особую обработку html, head, body чтобы они не брали ширину минимальных блоков
-    // так как они начинаются с 0 0; делать их на всю ширину экрана;
-
     // Корневой элемент всегда занимает всю доступную область
     rootBox->setPosition(0, 0);
     
@@ -54,54 +51,93 @@ void LayoutEngine::computeRootElement(LayoutBox* rootBox, double availableWidth,
         
         if (elementNode != nullptr && elementNode->getStyle().getProperty(StyleProperty::DISPLAY).getAs<StyleValue::DisplayType>().value() == StyleValue::DisplayType::BLOCK) {
             computeBlockElement(child, childX, childY, availableWidth, availableHeight);
-            childY += child->getHeight();
-            maxHeightContent = std::max(maxHeightContent, availableHeight);
-        } else {
-            double lineY = childY;
-            double lineMaxHeight = 0;
-            computeInlineElement(child, childX, lineY, lineMaxHeight, availableWidth);
-            childY = lineY + lineMaxHeight;
+            maxHeightContent = availableHeight;
         }
+
+        if (childNode->getTagName() == "body") child->setSize(windowWidth, maxHeightContent);
     }
 
-    rootBox->setSize(availableWidth, maxHeightContent);
+    rootBox->setSize(windowWidth, maxHeightContent); // Задаем ширину блока для html
 
     clippingElements(rootBox);
 }
 
 void LayoutEngine::clippingElements(LayoutBox* box) {
-    // Проверяем наличие явной ширины
-    double contentWidth = box->getVisibleWidth();
-    
-    std::cout << "sdsdsdddddddddddddddddddddddddddddddddddd" << contentWidth << std::endl;
-    // Проверяем, нужно ли применять обрезку
-    if (contentWidth > 0) {
-        // Проходим по детям и обрезаем их
+    // Размеры видимой области родителя
+    double contentWidth  = box->getVisibleWidth();
+    double contentHeight = box->getVisibleHeight();
+
+    // Если есть что обрезать
+    if (contentWidth > 0 && contentHeight > 0) {
+
         for (auto child : box->getChildren()) {
-            // Проверяем, выходит ли элемент за границы родителя
-            double childRightEdge = child->getX() + child->getVisibleWidth();
-            double parentRightEdge = box->getX() + contentWidth;
-            
-            if (childRightEdge > parentRightEdge) {
-                double overflow = childRightEdge - parentRightEdge;
-                // Уменьшаем видимую ширину, но не меньше 0
-                double newVisibleWidth = std::max(0.0, child->getVisibleWidth() - overflow);
-                child->setVisibleWidth(newVisibleWidth);
+
+            ElementNode* node = dynamic_cast<ElementNode*>(child->getNode());
+            double border = node != nullptr ? node->getStyle().getProperty(StyleProperty::BORDER_WIDTH).getAs<double>().value() : 0;
+
+            // Обрезание по ширине 
+            double oldVisibleWidth = child->getVisibleWidth();
+            double oldVisibleHeight = child->getVisibleHeight();
+
+            double childRight  = child->getX() + oldVisibleWidth;
+            double parentRight = box->getX() + contentWidth;
+
+            if (childRight > parentRight) {
+                double overflow = childRight - parentRight;
+                double newWidth = std::max(0.0, child->getVisibleWidth() - overflow);
+                child->setVisibleWidth(newWidth);
             }
 
+            // Работа с бордерами по X
+            if (childRight + border > parentRight && child->getVisibleWidth() > 0) {
+                double overflow = childRight + border - parentRight;
+                child->setDynamicBorderX(overflow > border ? 0 : border - overflow);
+            } else if (childRight - oldVisibleWidth >= parentRight) {
+                double overflow = childRight - oldVisibleWidth - parentRight;
+                child->setDynamicBorderX(overflow > border ? 0 : border - overflow);
+            } else {
+                if (!child->isOverflow()) {
+                    child->setDynamicBorderX(border);
+                    child->setOverflow(false);
+                } else child->setDynamicBorderX(border);
+            }
+
+            // Обрезание по высоте
+            double childBottom  = child->getY() + oldVisibleHeight;
+            double parentBottom = box->getY() + contentHeight;
+
+            if (childBottom > parentBottom) {
+                double overflow = childBottom - parentBottom;
+                double newHeight = std::max(0.0, child->getVisibleHeight() - overflow);
+                child->setVisibleHeight(newHeight);
+            }
+
+            // Работа с бордерами по Y
+            if (childBottom + border > parentBottom && child->getVisibleHeight() > 0) {
+                double overflow = childBottom + border - parentBottom;
+                child->setDynamicBorderY(overflow > border ? 0 : border - overflow);
+            } else if (childBottom - oldVisibleHeight >= parentBottom) {
+                double overflow = childBottom - oldVisibleHeight - parentBottom;
+                child->setDynamicBorderY(overflow > border ? 0 : border - overflow);
+            } else {
+                if (!child->isOverflow()) {
+                    child->setDynamicBorderY(border);
+                    child->setOverflow(false);
+                } else child->setDynamicBorderY(border);
+            }
+            
             clippingElements(child);
         }
     }
-
 }
 
-void LayoutEngine::computeBlockElement(LayoutBox* box, double parentX, double parentY, double availableWidth, double& availableHeight) {
+void LayoutEngine::computeBlockElement(LayoutBox* box, double parentX, double parentY, double& availableWidth, double& availableHeight) {
     Node* node = box->getNode();
     ElementNode* elementNode = dynamic_cast<ElementNode*>(node);
 
     if (elementNode != nullptr && elementNode->getStyle().getProperty(StyleProperty::DISPLAY).getAs<StyleValue::DisplayType>().value() == StyleValue::DisplayType::BLOCK) {
         
-        // 1. Получаем отступы, margins, borderы
+        // 1. Получаем отступы, margins, border
         double marginTop = elementNode->getStyle().getProperty(StyleProperty::MARGIN_TOP).getAs<double>().value();
         double marginRight = elementNode->getStyle().getProperty(StyleProperty::MARGIN_RIGHT).getAs<double>().value();
         double marginBottom = elementNode->getStyle().getProperty(StyleProperty::MARGIN_BOTTOM).getAs<double>().value();
@@ -129,10 +165,15 @@ void LayoutEngine::computeBlockElement(LayoutBox* box, double parentX, double pa
 
         // Для inline-элементов внутри блока
         double lineX = childX;
-        double lineY = childY;
         double lineMaxHeight = 0;
 
         double offsetY = childY;
+
+        bool flagInlineElement = false;
+        double oldOffsetY = offsetY;
+        LayoutBox* inlineBox = nullptr;
+
+
         for (auto child : box->getChildren()) {
             Node* childNode = child->getNode();
             ElementNode* childElementNode = dynamic_cast<ElementNode*>(childNode);
@@ -145,28 +186,43 @@ void LayoutEngine::computeBlockElement(LayoutBox* box, double parentX, double pa
             }
             
             if (isBlockChild) {
+
+                if (flagInlineElement) {
+                    // Корректируем родительский inline
+                    inlineBox->setPosition(inlineBox->getX(), oldOffsetY);
+                    inlineBox->setHeight(offsetY - oldOffsetY + lineMaxHeight);
+
+                    offsetY += lineMaxHeight;
+                    childY += lineMaxHeight;
+
+                    flagInlineElement = false;
+                }
+
                 double childeHeight = availableHeight - childY;
 
-                std::cout << "ChildY: " << childY << ' ';
+                double parentWidth = elementNode->getStyle().getProperty(StyleProperty::WIDTH).getAs<double>().value();
+                double localWindowWidth = windowWidth;
+                computeBlockElement(child, childX, offsetY, parentWidth <= 0 ? localWindowWidth : parentWidth, childeHeight);
 
-                computeBlockElement(child, childX, offsetY, contentWidth, childeHeight);
                 offsetY += childeHeight;
-
-                std::cout  << "offsetY: " << offsetY << std::endl;
 
                 // Сбрасываем inline состояние
                 lineX = childX;
-                lineY = childY;
                 lineMaxHeight = 0;
             } else {
                 // Inline ребенок (элемент или текстовый узел)
-                computeInlineElement(child, lineX, lineY, lineMaxHeight, contentWidth);
-                offsetY += lineMaxHeight;
+                flagInlineElement = true;
 
-                // После обработки inline элементов обновляем позицию Y
-                childY += lineMaxHeight;
-                lineY = childY;
-                lineMaxHeight = 0;
+                double parentWidth = elementNode->getStyle().getProperty(StyleProperty::WIDTH).getAs<double>().value();
+                double localWindowWidth = windowWidth;
+                double maxWidth = 0;
+                oldOffsetY = offsetY;
+                
+                computeInlineElement(child, lineX, offsetY, lineMaxHeight, parentWidth <= 0 ? localWindowWidth : parentWidth, maxWidth, childX);
+                
+                inlineBox = child;
+
+                if (maxWidth != 0) child->setWidth(maxWidth);
             }
         }
 
@@ -178,8 +234,6 @@ void LayoutEngine::computeBlockElement(LayoutBox* box, double parentX, double pa
         if (explicitHeight > 0) contentHeight = explicitHeight;
 
         double explicitWidth = elementNode->getStyle().getProperty(StyleProperty::WIDTH).getAs<double>().value();
-
-        std::cout << "explicitWidth: " <<  explicitWidth << " " << elementNode->getTagName() << std::endl;
 
         if (explicitWidth > 0) contentWidth = explicitWidth;
         
@@ -194,8 +248,10 @@ void LayoutEngine::computeBlockElement(LayoutBox* box, double parentX, double pa
         if (explicitHeight == 0 || 
             elementNode->getStyle().getProperty(StyleProperty::HEIGHT).getLengthUnit() == StyleValue::LengthUnit::AUTO) {
             double maxChildHeight = 0;
+    
+            // вот тут нужно поменять логику и вычитать из последней координаты дочернего элеменат начальную координату родителя
             for (auto child : box->getChildren()) maxChildHeight += (child->getHeight() + child->getMarginY());
-            
+
             if (maxChildHeight > 0) contentHeight = maxChildHeight;
         }
         
@@ -209,15 +265,18 @@ void LayoutEngine::computeBlockElement(LayoutBox* box, double parentX, double pa
         box->setMarginX(marginLeft + marginRight + border*2);
 
         availableHeight = totalHeight + marginTop + marginBottom + border*2;
+        availableWidth = contentWidth;
     }
 }
 
-void LayoutEngine::computeInlineElement(LayoutBox* box, double& currentLineX, double& currentLineY, double& currentLineMaxHeight, double availableWidth) {
+void LayoutEngine::computeInlineElement(LayoutBox* box, double& currentLineX, double& currentLineY, double& currentLineMaxHeight, double availableWidth, double& maxWidth, double lineXstart) {
     // currentLineX - текущая позиция x в строке, currentLineY - текущая позиция y в строке, 
     // currentLineMaxHeight - максимальная высота строки, availableWidth - доступная ширина для размещения
     
     Node* node = box->getNode();
     ElementNode* elementNode = dynamic_cast<ElementNode*>(node);
+
+    double oldCurrentLineY = currentLineY;
 
     if ((elementNode != nullptr && elementNode->getStyle().getProperty(StyleProperty::DISPLAY).getAs<StyleValue::DisplayType>().value() == StyleValue::DisplayType::INLINE)
         || node->getType() == Node::Type::TEXT_NODE) {
@@ -248,11 +307,11 @@ void LayoutEngine::computeInlineElement(LayoutBox* box, double& currentLineX, do
 
             // Дети начинают с ТЕКУЩЕЙ позиции в строке, а не с 0
             double childLineX = currentLineX + paddingLeft;
-            double childLineY = currentLineY + paddingTop;
+            currentLineY += paddingTop;
             double childLineMaxHeight = currentLineMaxHeight;
             
             for (auto child : box->getChildren()) 
-                computeInlineElement(child, childLineX, childLineY, childLineMaxHeight, availableWidth);
+                computeInlineElement(child, childLineX, currentLineY, childLineMaxHeight, availableWidth, maxWidth, lineXstart);
             
             // Вычисляем общую ширину как разницу между конечной и начальной позицией
             contentWidth = childLineX - currentLineX;
@@ -261,30 +320,25 @@ void LayoutEngine::computeInlineElement(LayoutBox* box, double& currentLineX, do
             contentWidth += paddingLeft + paddingRight;
             contentHeight += paddingTop + paddingBottom + marginTop + marginBottom;
         }
-        
+
         // Проверяем, помещается ли элемент в текущую строку
         if (currentLineX + contentWidth > availableWidth && currentLineX > 0) {
             // Перенос на новую строку
-            currentLineX = 0;
-            //currentLineY += currentLineMaxHeight;
-            currentLineMaxHeight = 0;
+            currentLineX = lineXstart;
+            std::cout << currentLineY << " " << currentLineMaxHeight << std::endl;
+            currentLineY += currentLineMaxHeight;
+            currentLineMaxHeight = contentHeight;
+            std::cout << currentLineY << " " << currentLineMaxHeight << std::endl << std::endl;
+        } else {
+            maxWidth = std::max(maxWidth, contentWidth);
+            currentLineMaxHeight = contentHeight; // тут надо будет сделать максимум в будущем
         }
-        
+    
         // Устанавливаем позицию и размер
         box->setPosition(currentLineX, currentLineY);
         box->setSize(contentWidth, contentHeight);
         
         // Обновляем состояние строки для следующего элемента (так как работа идет через ссылку)
         currentLineX += contentWidth;
-        currentLineMaxHeight = contentHeight;
-        
-        // Обработка inline-block элементов
-        if (elementNode != nullptr && elementNode->getStyle().getProperty(StyleProperty::DISPLAY).getAs<StyleValue::DisplayType>().value() == StyleValue::DisplayType::INLINE_BLOCK) {
-            // Inline-block ведет себя как block внутри, но как inline снаружи
-            // После inline-block принудительный перенос строки
-            currentLineX = 0;
-            //currentLineY += currentLineMaxHeight;
-            currentLineMaxHeight = 0;
-        }
     }
 }

@@ -22,6 +22,7 @@ private:
     uint32_t textColor;
     StyleValue::FontStyleType fontStyleType;
     StyleValue::FontWeightType fontWeightType;
+    StyleValue::FontDecorationType fontDecorationType;
 
     std::unordered_map<char, double> charWidthTable = {
         // Узкие
@@ -29,7 +30,7 @@ private:
 
         // Средние
         {'a', 6.8}, {'c', 6.7}, {'e', 7.0}, {'o', 7.1}, {'n', 7.1},
-        {'r', 6.2}, {'s', 6.6}, {'u', 7.0}, {'v', 7.1},
+        {'r', 6.2}, {'s', 6.6}, {'u', 7.0}, {'v', 7.1}, {'d', 7.3},
 
         // Широкие
         {'m', 9.6}, {'w', 10.6},
@@ -61,9 +62,11 @@ public:
     
     void setFontStyleType(StyleValue::FontStyleType fontStyleType_);
     void setFontWeightType(StyleValue::FontWeightType fontWeightType_);
+    void setFontDecorationType(StyleValue::FontDecorationType fontDecorationType_);
 
     StyleValue::FontStyleType getFontStyleType() const;
     StyleValue::FontWeightType getFontWeightType() const;
+    StyleValue::FontDecorationType getFontDecorationType() const;
     double getFontSize() const;
     uint32_t getTextColor() const;
 

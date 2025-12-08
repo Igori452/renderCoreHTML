@@ -7,7 +7,8 @@ ElementNode::ElementNode(std::string tagName) : Node(tagName) {
     if (   tagName == "b" 
         || tagName == "strong"
         || tagName == "i"
-        || tagName == "span" ) style.setProperty("display", "inline");
+        || tagName == "span"
+        /*|| tagName == "img"*/ ) style.setProperty("display", "inline");
 
     if (tagName == "b" || tagName == "strong") style.setProperty("font-weight", "bold");
     if (tagName == "i") style.setProperty("font-style", "italic");

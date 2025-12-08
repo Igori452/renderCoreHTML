@@ -14,35 +14,57 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
     double visibleWidth = layoutBox.getVisibleWidth();
     double visibleHeight = layoutBox.getVisibleHeight();
 
-    if (visibleWidth == 0 || visibleHeight == 0) return;
-
     float renderY = y - scrollOffset;
 
     // Пропуск элементов вне экрана
-    if (renderY + height < 0 || renderY > windowHeight)
-        return;
+    if (renderY + height < 0 || renderY > windowHeight) return;
 
     bool hasBackgroundImage = false;
+
+    int borderWidth = 0;
+
+    int borderRight = layoutBox.getDynamicBorderX();
+    int borderBottom = layoutBox.getDynamicBorderY();
+
+    sf::Color borderColor = sf::Color::Transparent;
+
     sf::Sprite backgroundSprite;
     sf::Texture backgroundTexture;
+
+    int clippedX = 0;
+    int clippedY = 0;
 
     if (node->getType() == Node::Type::ELEMENT_NODE) {
 
         ElementNode* elementNode = dynamic_cast<ElementNode*>(node);
         auto styleMap = elementNode->getStyle().getMapPropertyMerge();
 
-        // ----------------------------
-        //  Если overflow: hidden → создаём clip-буфер
-        // ----------------------------
+        //  Если overflow: hidden создаём clip-буфер
         sf::RenderTexture* clipBuffer = nullptr;
 
         if (layoutBox.isOverflow()) {
+            borderWidth = styleMap.find(StyleProperty::BORDER_WIDTH)->second.getAs<double>().value();
+
+            clippedX = borderWidth;
+            clippedY = borderWidth;
+
+            int widthBufferSize = 0;
+            int heightBufferSize = 0;
+            
+            if (visibleWidth > 0) widthBufferSize = visibleWidth + borderWidth + borderRight;
+            else if (borderRight > 0) widthBufferSize = borderRight;
+
+            if (visibleHeight > 0) heightBufferSize = visibleHeight + borderWidth + borderBottom;
+            else if (borderBottom > 0) heightBufferSize = borderBottom;
+
             clipBuffer = new sf::RenderTexture();
-            clipBuffer->create(
-                (unsigned)layoutBox.getVisibleWidth(),
-                (unsigned)layoutBox.getVisibleHeight()
-            );
-            clipBuffer->clear(sf::Color::Transparent);
+            if (visibleWidth > 0 && visibleHeight > 0) {
+                clipBuffer->create(
+                    (unsigned)(widthBufferSize),
+                    (unsigned)(heightBufferSize)
+                );
+                clipBuffer->clear(sf::Color::Transparent);
+            }
         }
 
         // Выбираем, куда рисовать: окно или буфер
@@ -54,7 +76,7 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
         if (!clipBuffer)
             elementRect.setPosition(x, renderY);
         else
-            elementRect.setPosition(0, 0); // <<< ВАЖНО: внутри рендертекстуры (0,0)
+            elementRect.setPosition(clippedX, clippedY);
 
         // Обрабатываем стили
         for (auto& item : styleMap) {
@@ -73,19 +95,21 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
                 }
 
                 case StyleProperty::BORDER_COLOR: {
-                    auto colorValue = item.second.getAs<uint32_t>().value();
-
-                    elementRect.setOutlineColor(sf::Color(
-                        (colorValue >> 24) & 0xFF,
-                        (colorValue >> 16) & 0xFF,
-                        (colorValue >> 8) & 0xFF,
-                        colorValue & 0xFF
-                    ));
+                    auto v = item.second.getAs<uint32_t>().value();
+                    borderColor = sf::Color(
+                        (v >> 24) & 0xFF,
+                        (v >> 16) & 0xFF,
+                        (v >> 8)  & 0xFF,
+                        v        & 0xFF
+                    );
+                    elementRect.setOutlineColor(borderColor);
                     break;
                 }
 
+                // Рисуем border для overflow элементов по осбенному
                 case StyleProperty::BORDER_WIDTH: {
-                    elementRect.setOutlineThickness((float)item.second.getAs<double>().value());
+                    if (!layoutBox.isOverflow()) 
+                        elementRect.setOutlineThickness((float)item.second.getAs<double>().value());
                     break;
                 }
 
@@ -102,7 +126,7 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
                         if (!clipBuffer)
                             backgroundSprite.setPosition(x, renderY);
                         else
-                            backgroundSprite.setPosition(0, 0);
+                            backgroundSprite.setPosition(clippedX, clippedY);
 
                         auto size = backgroundTexture.getSize();
                         backgroundSprite.setScale(
@@ -122,16 +146,39 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
         if (hasBackgroundImage)
             target.draw(backgroundSprite);
 
-        // ----------------------------
-        // Если был clip → переносим в окно
-        // ----------------------------
+        // Если был clip переносим в окно
         if (clipBuffer) {
+
+            if (borderWidth > 0) {
+                // 1. TOP border
+                sf::RectangleShape top(sf::Vector2f(width + borderWidth, borderWidth));
+                top.setFillColor(borderColor);
+                top.setPosition(0, 0);
+                clipBuffer->draw(top);
+
+                // 2. BOTTOM border
+                sf::RectangleShape bottom(sf::Vector2f(width + borderWidth*2, borderWidth));
+                bottom.setFillColor(borderColor);
+                bottom.setPosition(0, height + borderWidth);
+                clipBuffer->draw(bottom);
+
+                // 3. LEFT border
+                sf::RectangleShape left(sf::Vector2f(borderWidth, height + borderWidth));
+                left.setFillColor(borderColor);
+                left.setPosition(0, 0);
+                clipBuffer->draw(left);
+
+                // 4. RIGHT border
+                sf::RectangleShape right(sf::Vector2f(borderWidth, height + borderWidth));
+                right.setFillColor(borderColor);
+                right.setPosition(width + borderWidth, 0);
+                clipBuffer->draw(right);
+            }
 
             clipBuffer->display();
 
             sf::Sprite clipped(clipBuffer->getTexture());
-            clipped.setPosition(x, renderY); // ставим туда, где должен быть элемент
-
+            clipped.setPosition(x - clippedX, renderY - clippedY);
             window.draw(clipped);
 
             delete clipBuffer;
@@ -193,7 +240,8 @@ void RendererSFML::drawText(LayoutBox& layoutBox) {
     sf::Uint32 style = sf::Text::Regular;
     if (textMetrics.getFontWeightType() == StyleValue::FontWeightType::BOLD) style |= sf::Text::Bold;
     if (textMetrics.getFontStyleType()  == StyleValue::FontStyleType::ITALIC) style |= sf::Text::Italic;
-    if (textMetrics.getFontStyleType()  == StyleValue::FontStyleType::UNDERLINED) style |= sf::Text::Underlined;
+    if (textMetrics.getFontDecorationType()  == StyleValue::FontDecorationType::UNDERLINED) style |= sf::Text::Underlined;
+    else if (textMetrics.getFontDecorationType()  == StyleValue::FontDecorationType::LINE_THROUGH) style |= sf::Text::StrikeThrough;
 
     text.setStyle(style);
 
@@ -201,9 +249,7 @@ void RendererSFML::drawText(LayoutBox& layoutBox) {
     sf::FloatRect bounds = text.getLocalBounds();
     text.setOrigin(0, bounds.top);
 
-    // -----------------------
     // 2. Проверяем overflow
-    // -----------------------
     bool clip = layoutBox.isOverflow();
 
     if (!clip) {
@@ -214,9 +260,7 @@ void RendererSFML::drawText(LayoutBox& layoutBox) {
         return;
     }
 
-    // -----------------------
     // 3. Рендерим текст в clip-buffer
-    // -----------------------
     unsigned clipW = (unsigned)layoutBox.getVisibleWidth();
     unsigned clipH = (unsigned)layoutBox.getVisibleHeight();
 

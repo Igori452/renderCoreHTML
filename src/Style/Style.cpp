@@ -23,6 +23,7 @@ StyleProperty Style::stringToProperty(const std::string& propertyName) {
         {"font-family", StyleProperty::FONT_FAMILY},
         {"font-style", StyleProperty::FONT_STYLE},
         {"font-weight", StyleProperty::FONT_WEIGHT},
+        {"text-decoration", StyleProperty::FONT_DECORATION},
     };
 
     auto it = propertyMap.find(propertyName);
@@ -97,4 +98,5 @@ const std::unordered_map<StyleProperty, StyleValue> Style::propertiesDefault = {
     {StyleProperty::FONT_FAMILY, StyleValue::setStyleValueFromString(StyleProperty::FONT_FAMILY, "arialmt")},
     {StyleProperty::FONT_STYLE, StyleValue::setStyleValueFromString(StyleProperty::FONT_STYLE, "normal")},
     {StyleProperty::FONT_WEIGHT, StyleValue::setStyleValueFromString(StyleProperty::FONT_WEIGHT, "normal")},
+    {StyleProperty::FONT_DECORATION, StyleValue::setStyleValueFromString(StyleProperty::FONT_DECORATION, "normal")},
 };

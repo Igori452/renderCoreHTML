@@ -20,6 +20,13 @@ StyleValue StyleValue::setStyle(FontStyleType _value) {
     return styleValue;
 }
 
+StyleValue StyleValue::setStyle(FontDecorationType _value) {
+    StyleValue styleValue;
+    styleValue.type = Type::FONT_DECORATION;
+    styleValue.fontDecorationType = _value;
+    return styleValue;
+}
+
 StyleValue StyleValue::setStyle(std::string _value) {
     StyleValue styleValue;
     styleValue.type = Type::STRINGVALUE;
@@ -108,7 +115,13 @@ StyleValue StyleValue::setStyleValueFromString (StyleProperty property, const st
         case StyleProperty::FONT_STYLE: {
             if (stringValue == "normal") return setStyle(FontStyleType::NORMAL);
             else if (stringValue == "italic") return setStyle(FontStyleType::ITALIC);
-            else if (stringValue == "underlined") return setStyle(FontStyleType::UNDERLINED);
+            else return setStyle();
+        }
+
+        case StyleProperty::FONT_DECORATION: {
+            if (stringValue == "normal") return setStyle(FontDecorationType::NORMAL);
+            else if (stringValue == "underline") return setStyle(FontDecorationType::UNDERLINED);
+            else if (stringValue == "line-through") return setStyle(FontDecorationType::LINE_THROUGH);
             else return setStyle();
         }
 
