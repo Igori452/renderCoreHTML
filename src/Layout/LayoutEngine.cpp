@@ -67,67 +67,63 @@ void LayoutEngine::clippingElements(LayoutBox* box) {
     double contentWidth  = box->getVisibleWidth();
     double contentHeight = box->getVisibleHeight();
 
-    // Если есть что обрезать
-    if (contentWidth > 0 && contentHeight > 0) {
+    for (auto child : box->getChildren()) {
 
-        for (auto child : box->getChildren()) {
+        ElementNode* node = dynamic_cast<ElementNode*>(child->getNode());
+        double border = node != nullptr ? node->getStyle().getProperty(StyleProperty::BORDER_WIDTH).getAs<double>().value() : 0;
 
-            ElementNode* node = dynamic_cast<ElementNode*>(child->getNode());
-            double border = node != nullptr ? node->getStyle().getProperty(StyleProperty::BORDER_WIDTH).getAs<double>().value() : 0;
+        // Обрезание по ширине 
+        double oldVisibleWidth = child->getVisibleWidth();
+        double oldVisibleHeight = child->getVisibleHeight();
 
-            // Обрезание по ширине 
-            double oldVisibleWidth = child->getVisibleWidth();
-            double oldVisibleHeight = child->getVisibleHeight();
+        double childRight  = child->getX() + oldVisibleWidth;
+        double parentRight = box->getX() + contentWidth;
 
-            double childRight  = child->getX() + oldVisibleWidth;
-            double parentRight = box->getX() + contentWidth;
-
-            if (childRight > parentRight) {
-                double overflow = childRight - parentRight;
-                double newWidth = std::max(0.0, child->getVisibleWidth() - overflow);
-                child->setVisibleWidth(newWidth);
-            }
-
-            // Работа с бордерами по X
-            if (childRight + border > parentRight && child->getVisibleWidth() > 0) {
-                double overflow = childRight + border - parentRight;
-                child->setDynamicBorderX(overflow > border ? 0 : border - overflow);
-            } else if (childRight - oldVisibleWidth >= parentRight) {
-                double overflow = childRight - oldVisibleWidth - parentRight;
-                child->setDynamicBorderX(overflow > border ? 0 : border - overflow);
-            } else {
-                if (!child->isOverflow()) {
-                    child->setDynamicBorderX(border);
-                    child->setOverflow(false);
-                } else child->setDynamicBorderX(border);
-            }
-
-            // Обрезание по высоте
-            double childBottom  = child->getY() + oldVisibleHeight;
-            double parentBottom = box->getY() + contentHeight;
-
-            if (childBottom > parentBottom) {
-                double overflow = childBottom - parentBottom;
-                double newHeight = std::max(0.0, child->getVisibleHeight() - overflow);
-                child->setVisibleHeight(newHeight);
-            }
-
-            // Работа с бордерами по Y
-            if (childBottom + border > parentBottom && child->getVisibleHeight() > 0) {
-                double overflow = childBottom + border - parentBottom;
-                child->setDynamicBorderY(overflow > border ? 0 : border - overflow);
-            } else if (childBottom - oldVisibleHeight >= parentBottom) {
-                double overflow = childBottom - oldVisibleHeight - parentBottom;
-                child->setDynamicBorderY(overflow > border ? 0 : border - overflow);
-            } else {
-                if (!child->isOverflow()) {
-                    child->setDynamicBorderY(border);
-                    child->setOverflow(false);
-                } else child->setDynamicBorderY(border);
-            }
-            
-            clippingElements(child);
+        if (childRight > parentRight) {
+            double overflow = childRight - parentRight;
+            double newWidth = std::max(0.0, child->getVisibleWidth() - overflow);
+            child->setVisibleWidth(newWidth);
         }
+
+        // Работа с бордерами по X
+        if (childRight + border > parentRight && child->getVisibleWidth() > 0) {
+            double overflow = childRight + border - parentRight;
+            child->setDynamicBorderX(overflow > border ? 0 : border - overflow);
+        } else if (childRight - oldVisibleWidth >= parentRight) {
+            double overflow = childRight - oldVisibleWidth - parentRight;
+            child->setDynamicBorderX(overflow > border ? 0 : border - overflow);
+        } else {
+            if (!child->isOverflow()) {
+                child->setDynamicBorderX(border);
+                child->setOverflow(false);
+            } else child->setDynamicBorderX(border);
+        }
+
+        // Обрезание по высоте
+        double childBottom  = child->getY() + oldVisibleHeight;
+        double parentBottom = box->getY() + contentHeight;
+
+        if (childBottom > parentBottom) {
+            double overflow = childBottom - parentBottom;
+            double newHeight = std::max(0.0, child->getVisibleHeight() - overflow);
+            child->setVisibleHeight(newHeight);
+        }
+
+        // Работа с бордерами по Y
+        if (childBottom + border > parentBottom && child->getVisibleHeight() > 0) {
+            double overflow = childBottom + border - parentBottom;
+            child->setDynamicBorderY(overflow > border ? 0 : border - overflow);
+        } else if (childBottom - oldVisibleHeight >= parentBottom) {
+            double overflow = childBottom - oldVisibleHeight - parentBottom;
+            child->setDynamicBorderY(overflow > border ? 0 : border - overflow);
+        } else {
+            if (!child->isOverflow()) {
+                child->setDynamicBorderY(border);
+                child->setOverflow(false);
+            } else child->setDynamicBorderY(border);
+        }
+        
+        clippingElements(child);
     }
 }
 
