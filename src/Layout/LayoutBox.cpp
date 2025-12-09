@@ -130,7 +130,7 @@ void LayoutBox::printLayoutBoxTree() const {
         // Простые данные блока
         std::cout << "Box (" << int(box->getNode()->getType()) << "): (" << box->x << ", " << box->y << ") ";
         std::cout << box->width << "x" << box->height << "(" << box->getNode()->getTagName() << "); visibleWidth: "
-        << box->visibleWidth << "; visibleHeight: " << box->visibleHeight << "; " << std::endl;
+        << box->visibleWidth << "; visibleHeight: " << box->visibleHeight << "; " << box->isOverflow() << std::endl;
         
         // Дети
         for (const auto& child : box->children) printRecursive(child, depth + 1);

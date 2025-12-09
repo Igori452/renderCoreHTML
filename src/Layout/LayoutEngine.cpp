@@ -173,7 +173,6 @@ void LayoutEngine::computeBlockElement(LayoutBox* box, double parentX, double pa
         double oldOffsetY = offsetY;
         LayoutBox* inlineBox = nullptr;
 
-
         for (auto child : box->getChildren()) {
             Node* childNode = child->getNode();
             ElementNode* childElementNode = dynamic_cast<ElementNode*>(childNode);
@@ -248,10 +247,15 @@ void LayoutEngine::computeBlockElement(LayoutBox* box, double parentX, double pa
         if (explicitHeight == 0 || 
             elementNode->getStyle().getProperty(StyleProperty::HEIGHT).getLengthUnit() == StyleValue::LengthUnit::AUTO) {
             double maxChildHeight = 0;
+            double maxY = 0;
     
             // вот тут нужно поменять логику и вычитать из последней координаты дочернего элеменат начальную координату родителя
-            for (auto child : box->getChildren()) maxChildHeight += (child->getHeight() + child->getMarginY());
+            for (auto& child : box->getChildren()) {
+                maxY = std::max(child->getY(), maxY);
+                maxChildHeight = child->getHeight();
+            }
 
+            maxChildHeight = maxY - box->getY() + maxChildHeight;
             if (maxChildHeight > 0) contentHeight = maxChildHeight;
         }
         
@@ -271,24 +275,24 @@ void LayoutEngine::computeBlockElement(LayoutBox* box, double parentX, double pa
 
 void LayoutEngine::computeInlineElement(LayoutBox* box, double& currentLineX, double& currentLineY, double& currentLineMaxHeight, double availableWidth, double& maxWidth, double lineXstart) {
     // currentLineX - текущая позиция x в строке, currentLineY - текущая позиция y в строке, 
-    // currentLineMaxHeight - максимальная высота строки, availableWidth - доступная ширина для размещения
+    // currentLineMaxHeight - максимальная высота строки, availableWidth - доступная ширина для размещения (от родителя)
     
     Node* node = box->getNode();
     ElementNode* elementNode = dynamic_cast<ElementNode*>(node);
-
-    double oldCurrentLineY = currentLineY;
 
     if ((elementNode != nullptr && elementNode->getStyle().getProperty(StyleProperty::DISPLAY).getAs<StyleValue::DisplayType>().value() == StyleValue::DisplayType::INLINE)
         || node->getType() == Node::Type::TEXT_NODE) {
         
         double contentWidth = 0;
         double contentHeight = 0;
+        bool textBlock = false;
         
         if (node->getType() == Node::Type::TEXT_NODE) {
             // Текстовый узел - используем готовые метрики
             TextElement* textElement = dynamic_cast<TextElement*>(node);
             contentWidth = textElement->getTextMetrics().getTextWidth(textElement->getText());
             contentHeight = textElement->getTextMetrics().getTextHeight(textElement->getText());
+            textBlock= true;
         } else {
              // Учитываем margin
             double marginTop = elementNode->getStyle().getProperty(StyleProperty::MARGIN_TOP).getAs<double>().value();
@@ -310,32 +314,43 @@ void LayoutEngine::computeInlineElement(LayoutBox* box, double& currentLineX, do
             currentLineY += paddingTop;
             double childLineMaxHeight = currentLineMaxHeight;
             
+            std::cout << "!!!!!!!!!!currentLineX: " << currentLineX << std::endl;
             for (auto child : box->getChildren()) 
                 computeInlineElement(child, childLineX, currentLineY, childLineMaxHeight, availableWidth, maxWidth, lineXstart);
-            
+
+            std::cout << "!!!!!!!!!!currentLineX: " << currentLineX << " " << childLineX << " " << lineXstart << " " << box->getNode()->getTagName() << " " << availableWidth << std::endl << std::endl;
+
             // Вычисляем общую ширину как разницу между конечной и начальной позицией
-            contentWidth = childLineX - currentLineX;
+            if (childLineX < currentLineX) {
+                contentWidth = currentLineX - childLineX;
+                currentLineX -= contentWidth;
+            } else contentWidth = childLineX - currentLineX;
+
             contentHeight = childLineMaxHeight;
 
             contentWidth += paddingLeft + paddingRight;
             contentHeight += paddingTop + paddingBottom + marginTop + marginBottom;
         }
-
+        
         // Проверяем, помещается ли элемент в текущую строку
-        if (currentLineX + contentWidth > availableWidth && currentLineX > 0) {
+        if (textBlock && currentLineX + contentWidth - lineXstart > availableWidth && currentLineX > 0) {
+            if (contentWidth > availableWidth) contentWidth = availableWidth, box->setOverflow(true);
+            else currentLineX = lineXstart;
+
             // Перенос на новую строку
-            currentLineX = lineXstart;
-            std::cout << currentLineY << " " << currentLineMaxHeight << std::endl;
             currentLineY += currentLineMaxHeight;
             currentLineMaxHeight = contentHeight;
-            std::cout << currentLineY << " " << currentLineMaxHeight << std::endl << std::endl;
+
+            std::cout << "currentLineY: " << currentLineY << std::endl;
         } else {
             maxWidth = std::max(maxWidth, contentWidth);
             currentLineMaxHeight = contentHeight; // тут надо будет сделать максимум в будущем
         }
     
         // Устанавливаем позицию и размер
-        box->setPosition(currentLineX, currentLineY);
+        if (contentWidth == availableWidth) box->setPosition(lineXstart, currentLineY);
+        else box->setPosition(currentLineX, currentLineY);
+
         box->setSize(contentWidth, contentHeight);
         
         // Обновляем состояние строки для следующего элемента (так как работа идет через ссылку)

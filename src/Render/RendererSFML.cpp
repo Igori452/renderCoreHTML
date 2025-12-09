@@ -199,7 +199,6 @@ void RendererSFML::drawText(LayoutBox& layoutBox) {
 
     if (visibleWidth == 0 || visibleHeight == 0) return;
 
-
     float renderY = y - scrollOffset;
 
     if (renderY + height < 0 || renderY > windowHeight)

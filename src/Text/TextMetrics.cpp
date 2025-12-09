@@ -3,7 +3,7 @@
 // Значения как для обычного CSS (примерно)
 static constexpr double BASE_FONT_SIZE = 16.0;     // px
 static constexpr double BASE_CHAR_WIDTH = 7.0;     // px для 16px шрифта
-static constexpr double BASE_LINE_HEIGHT = 14.2;   // px для 16px шрифта
+static constexpr double BASE_LINE_HEIGHT = 14.4;   // px для 16px шрифта
 
 void TextMetrics::setFontSize(double size) { fontSize = size; }
 void TextMetrics::setColor(uint32_t color) { textColor = color; }
