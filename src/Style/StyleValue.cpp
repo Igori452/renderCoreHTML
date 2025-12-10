@@ -158,7 +158,7 @@ StyleValue StyleValue::setStyleValueFromString (StyleProperty property, const st
             if (lengthUnit == StyleValue::LengthUnit::AUTO) return setStyle(0.0, lengthUnit);
             else {
                 try {
-                    double numericValue = std::stod(stringValue);
+                    double numericValue = std::abs(std::stod(stringValue));
                     return setStyle(numericValue, lengthUnit);
                 } catch (...) {
                     return setStyle();
