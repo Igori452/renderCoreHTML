@@ -1,6 +1,7 @@
 #include "RendererSFML.h"
 
-RendererSFML::RendererSFML() : window(sf::VideoMode(800, 600), "SFML - Mini Browser") {}
+RendererSFML::RendererSFML(double windowWidth_, double windowHeight_) :
+    window(sf::VideoMode(windowWidth_, windowHeight_), "SFML - Mini Browser") {}
 
 void RendererSFML::drawElement(LayoutBox& layoutBox) {
 
@@ -17,7 +18,7 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
     float renderY = y - scrollOffset;
 
     // Пропуск элементов вне экрана
-    if (renderY + height < 0 || renderY > windowHeight) return;
+    if (renderY + height < 0 || renderY > static_cast<float>(window.getSize().y)) return;
 
     bool hasBackgroundImage = false;
 
@@ -58,13 +59,11 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
             else if (borderBottom > 0) heightBufferSize = borderBottom;
 
             clipBuffer = new sf::RenderTexture();
-            if (visibleWidth > 0 && visibleHeight > 0) {
-                clipBuffer->create(
-                    (unsigned)(widthBufferSize),
-                    (unsigned)(heightBufferSize)
-                );
-                clipBuffer->clear(sf::Color::Transparent);
-            }
+            clipBuffer->create(
+                (unsigned)(widthBufferSize),
+                (unsigned)(heightBufferSize)
+            );
+            clipBuffer->clear(sf::Color::Transparent);
         }
 
         // Выбираем, куда рисовать: окно или буфер
@@ -150,6 +149,7 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
         if (clipBuffer) {
 
             if (borderWidth > 0) {
+
                 // 1. TOP border
                 sf::RectangleShape top(sf::Vector2f(width + borderWidth, borderWidth));
                 top.setFillColor(borderColor);
@@ -178,6 +178,7 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
             clipBuffer->display();
 
             sf::Sprite clipped(clipBuffer->getTexture());
+            //clipped.setPosition(x, y); // Просто рисуем в (x, y)
             clipped.setPosition(x - clippedX, renderY - clippedY);
             window.draw(clipped);
 
@@ -201,7 +202,7 @@ void RendererSFML::drawText(LayoutBox& layoutBox) {
 
     float renderY = y - scrollOffset;
 
-    if (renderY + height < 0 || renderY > windowHeight)
+    if (renderY + height < 0 || renderY > static_cast<float>(window.getSize().y))
         return;
 
     if (node->getType() != Node::Type::TEXT_NODE)
@@ -217,15 +218,13 @@ void RendererSFML::drawText(LayoutBox& layoutBox) {
     uint32_t textColorValue = textMetrics.getTextColor();
     std::string fontPath = textMetrics.getFontPath();
 
-    // -----------------------
-    // 1. Создаём объект текста
-    // -----------------------
+    // Создаём объект текста
     sf::Font* font = new sf::Font();
     font->loadFromFile(fontPath);
 
     sf::Text text;
     text.setString(textContent);
-    text.setCharacterSize(static_cast<unsigned int>(fontSize));
+    text.setCharacterSize((unsigned)fontSize);
     text.setFont(*font);
 
     // Цвет
@@ -243,10 +242,6 @@ void RendererSFML::drawText(LayoutBox& layoutBox) {
     else if (textMetrics.getFontDecorationType()  == StyleValue::FontDecorationType::LINE_THROUGH) style |= sf::Text::StrikeThrough;
 
     text.setStyle(style);
-
-    // Корректировка вертикального оффсета
-    sf::FloatRect bounds = text.getLocalBounds();
-    text.setOrigin(0, bounds.top);
 
     // 2. Проверяем overflow
     bool clip = layoutBox.isOverflow();
@@ -273,9 +268,7 @@ void RendererSFML::drawText(LayoutBox& layoutBox) {
     clipBuffer.draw(text);
     clipBuffer.display();
 
-    // -----------------------
-    // 4. Переносим в окно
-    // -----------------------
+    // Переносим в окно
     sf::Sprite clipped(clipBuffer.getTexture());
     clipped.setPosition(x, renderY);
 
@@ -317,7 +310,7 @@ void RendererSFML::showScene(LayoutBox& rootLayoutBox) {
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) window.close();
 
-            float maxScroll = std::max(0.f, contentHeight - windowHeight);
+            float maxScroll = std::max(0.f, contentHeight - static_cast<float>(window.getSize().y));
 
             scrollOffset -= event.mouseWheelScroll.delta * 40.f;
 
@@ -330,4 +323,35 @@ void RendererSFML::showScene(LayoutBox& rootLayoutBox) {
         renderLayoutTree(rootLayoutBox);
         window.display();
     }
+}
+
+double RendererSFML::computeTextWidth(const std::string& utf8Text, const TextMetrics& metrics) const {
+    sf::Font font;
+    if (!font.loadFromFile(metrics.getFontPath()))
+        return 1.0;
+
+    unsigned pixelSize = (unsigned)metrics.getFontSize();
+
+    sf::String sfStr(utf8Text);
+    std::basic_string<sf::Uint32> text32 = sfStr.toUtf32();
+
+    float sfmlWidth = 0;
+
+    for (size_t i = 0; i < text32.size(); i++)
+    {
+        sf::Uint32 c = text32[i];
+
+        if (i > 0)
+            sfmlWidth += font.getKerning(text32[i - 1], c, pixelSize);
+
+        const sf::Glyph& glyph = font.getGlyph(
+            c,
+            pixelSize,
+            metrics.getFontStyleType() == StyleValue::FontStyleType::ITALIC
+        );
+
+        sfmlWidth += glyph.advance;
+    }
+
+    return sfmlWidth;
 }

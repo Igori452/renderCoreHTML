@@ -331,6 +331,33 @@ src/Node/TextElement.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_browser.dir/build.make CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.s
 .PHONY : src/Node/TextElement.cpp.s
 
+src/Render/Renderer.o: src/Render/Renderer.cpp.o
+
+.PHONY : src/Render/Renderer.o
+
+# target to build an object file
+src/Render/Renderer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_browser.dir/build.make CMakeFiles/mini_browser.dir/src/Render/Renderer.cpp.o
+.PHONY : src/Render/Renderer.cpp.o
+
+src/Render/Renderer.i: src/Render/Renderer.cpp.i
+
+.PHONY : src/Render/Renderer.i
+
+# target to preprocess a source file
+src/Render/Renderer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_browser.dir/build.make CMakeFiles/mini_browser.dir/src/Render/Renderer.cpp.i
+.PHONY : src/Render/Renderer.cpp.i
+
+src/Render/Renderer.s: src/Render/Renderer.cpp.s
+
+.PHONY : src/Render/Renderer.s
+
+# target to generate assembly for a file
+src/Render/Renderer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mini_browser.dir/build.make CMakeFiles/mini_browser.dir/src/Render/Renderer.cpp.s
+.PHONY : src/Render/Renderer.cpp.s
+
 src/Render/RendererSFML.o: src/Render/RendererSFML.cpp.o
 
 .PHONY : src/Render/RendererSFML.o
@@ -496,6 +523,9 @@ help:
 	@echo "... src/Node/TextElement.o"
 	@echo "... src/Node/TextElement.i"
 	@echo "... src/Node/TextElement.s"
+	@echo "... src/Render/Renderer.o"
+	@echo "... src/Render/Renderer.i"
+	@echo "... src/Render/Renderer.s"
 	@echo "... src/Render/RendererSFML.o"
 	@echo "... src/Render/RendererSFML.i"
 	@echo "... src/Render/RendererSFML.s"

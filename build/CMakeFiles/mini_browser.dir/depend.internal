@@ -15,6 +15,7 @@ CMakeFiles/mini_browser.dir/src/HTMLParser/HTMLparserGumbo.cpp.o
  /workspace/src/Node/ElementNode.h
  /workspace/src/Node/Node.h
  /workspace/src/Node/TextElement.h
+ /workspace/src/Render/Renderer.h
  /workspace/src/Style/Style.h
  /workspace/src/Style/StyleProperties.h
  /workspace/src/Style/StyleValue.h
@@ -25,6 +26,7 @@ CMakeFiles/mini_browser.dir/src/Layout/LayoutBox.cpp.o
  /workspace/src/Node/ElementNode.h
  /workspace/src/Node/Node.h
  /workspace/src/Node/TextElement.h
+ /workspace/src/Render/Renderer.h
  /workspace/src/Style/Style.h
  /workspace/src/Style/StyleProperties.h
  /workspace/src/Style/StyleValue.h
@@ -36,6 +38,7 @@ CMakeFiles/mini_browser.dir/src/Layout/LayoutEngine.cpp.o
  /workspace/src/Node/ElementNode.h
  /workspace/src/Node/Node.h
  /workspace/src/Node/TextElement.h
+ /workspace/src/Render/Renderer.h
  /workspace/src/Style/Style.h
  /workspace/src/Style/StyleProperties.h
  /workspace/src/Style/StyleValue.h
@@ -52,6 +55,7 @@ CMakeFiles/mini_browser.dir/src/Node/Node.cpp.o
  /workspace/src/Node/Node.cpp
  /workspace/src/Node/Node.h
  /workspace/src/Node/TextElement.h
+ /workspace/src/Render/Renderer.h
  /workspace/src/Style/Style.h
  /workspace/src/Style/StyleProperties.h
  /workspace/src/Style/StyleValue.h
@@ -61,10 +65,14 @@ CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.o
  /workspace/src/Node/Node.h
  /workspace/src/Node/TextElement.cpp
  /workspace/src/Node/TextElement.h
+ /workspace/src/Render/Renderer.h
  /workspace/src/Style/Style.h
  /workspace/src/Style/StyleProperties.h
  /workspace/src/Style/StyleValue.h
  /workspace/src/Text/TextMetrics.h
+CMakeFiles/mini_browser.dir/src/Render/Renderer.cpp.o
+ /workspace/src/Render/Renderer.cpp
+ /workspace/src/Render/Renderer.h
 CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.o
  /workspace/src/Layout/LayoutBox.h
  /workspace/src/Node/ElementNode.h
@@ -87,6 +95,7 @@ CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.o
  /workspace/src/Style/StyleValue.cpp
  /workspace/src/Style/StyleValue.h
 CMakeFiles/mini_browser.dir/src/Text/TextMetrics.cpp.o
+ /workspace/src/Render/Renderer.h
  /workspace/src/Style/StyleProperties.h
  /workspace/src/Style/StyleValue.h
  /workspace/src/Text/TextMetrics.cpp

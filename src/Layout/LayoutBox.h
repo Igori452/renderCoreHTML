@@ -1,14 +1,13 @@
 #ifndef LAYOUT_BOX_H
 #define LAYOUT_BOX_H
 
-#include <vector>
-
 #include "../Node/Node.h"
 #include "../Node/ElementNode.h"
 #include "../Node/TextElement.h"
 #include "../Style/Style.h"
 #include <iostream>
 #include <functional>
+#include <vector>
 
 class LayoutBox {
     private:

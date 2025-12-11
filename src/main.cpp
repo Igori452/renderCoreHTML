@@ -14,14 +14,16 @@ int main () {
     std::cout << std::endl << std::endl;
 
     LayoutEngine* layoutEngine = new LayoutEngine();
+    RendererSFML* renderer = new RendererSFML(layoutEngine->getWindowWidth(), layoutEngine->getWindowHeight());
+    Renderer::init(renderer); // Установка стратегии для вычисления правильных метрик шрифта (не обязательный метод)
+
     LayoutBox* rootLayoutBox = layoutEngine->buildLayoutTree(rootNode);
     layoutEngine->computeLayout(rootLayoutBox, layoutEngine->getWindowWidth(), layoutEngine->getWindowHeight());
+
     rootLayoutBox->printLayoutBoxTree();
-    
     std::cout << std::endl;
 
-    RendererSFML* render = new RendererSFML();
-    render->showScene(*rootLayoutBox);
+    renderer->showScene(*rootLayoutBox);
 
     return 0;
 }

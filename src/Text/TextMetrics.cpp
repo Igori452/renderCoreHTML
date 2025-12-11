@@ -1,10 +1,5 @@
 #include "TextMetrics.h"
 
-// Значения как для обычного CSS (примерно)
-static constexpr double BASE_FONT_SIZE = 16.0;     // px
-static constexpr double BASE_CHAR_WIDTH = 7.0;     // px для 16px шрифта
-static constexpr double BASE_LINE_HEIGHT = 14.4;   // px для 16px шрифта
-
 void TextMetrics::setFontSize(double size) { fontSize = size; }
 void TextMetrics::setColor(uint32_t color) { textColor = color; }
 
@@ -55,24 +50,21 @@ bool TextMetrics::setFont(const std::string& fontName) {
     return setFontFromFile(fontPath);
 }
 
+double TextMetrics::getCorrectedTextWidth(const std::string& text) const {
+    // Проверяем задан ли Render который может по-другому вычислять метрику для шрифта
+    // Если нет используем коэфициент 1, который определен в интерфейсе Renderer
+    const Renderer* r = Renderer::get();
+    if (!r) return getSingleLineWidth(text);
+
+    return r->computeTextWidth(text, *this);
+}
+
 bool TextMetrics::isFontLoaded() const { return fontLoaded; }
 std::string TextMetrics::getFontPath() const { return fontPath; }
 
 double TextMetrics::getFontScale() const {
     if (fontSize <= 0) return 1.0;
     return fontSize / BASE_FONT_SIZE;
-}
-
-double TextMetrics::getCharWidth(char c) const {
-    double baseWidth;
-
-    auto it = charWidthTable.find(c);
-    if (it != charWidthTable.end()) {
-        baseWidth = it->second;
-    } else baseWidth = BASE_CHAR_WIDTH;
-    
-
-    return baseWidth * getFontScale() * getStyleCoefficient();
 }
 
 double TextMetrics::getStyleCoefficient() const {
@@ -86,48 +78,42 @@ double TextMetrics::getStyleCoefficient() const {
     return coeff;
 }
 
-// итоговая ширина символа
-double TextMetrics::getEffectiveCharWidth() const {
-    return BASE_CHAR_WIDTH * getFontScale() * getStyleCoefficient();
+double TextMetrics::getCharWidth() const {
+    return BASE_CHAR_WIDTH * getStyleCoefficient() * getFontScale();
 }
 
 // итоговая высота строки
-double TextMetrics::getEffectiveLineHeight() const {
+double TextMetrics::getCharHeight() const {
     return BASE_LINE_HEIGHT * getFontScale();
 }
 
 double TextMetrics::getSingleLineWidth(const std::string& text) const {
     if (text.empty()) return 0.0;
-
-    double width = 0.0;
-
-    for (char c : text)
-        width += getCharWidth(c);
-
-    auto it = charWidthTable.find(' ');
-    double spaceWidth = (it != charWidthTable.end() ? it->second : BASE_CHAR_WIDTH);
-    width += spaceWidth * getFontScale() * getStyleCoefficient() * 1.4;
-
-    return width;
+    return getCharWidth() * text.length();
 }
 
 double TextMetrics::getTextWidth(const std::string& text) const {
     if (text.empty()) return 0.0;
 
     double maxWidth = 0.0;
+
     size_t start = 0;
     size_t end = text.find('\n');
-    
+
     while (true) {
         std::string line = text.substr(start, end - start);
-        double lineWidth = getSingleLineWidth(line);
-        if (lineWidth > maxWidth) maxWidth = lineWidth;
-        
-        if (end == std::string::npos) break;
+
+        double corrected = getCorrectedTextWidth(line);
+        if (corrected > maxWidth)
+            maxWidth = corrected;
+
+        if (end == std::string::npos)
+            break;
+
         start = end + 1;
         end = text.find('\n', start);
     }
-    
+
     return maxWidth;
 }
 
@@ -143,7 +129,7 @@ double TextMetrics::getTextHeight(const std::string& text) const {
 }
 
 double TextMetrics::getTextHeightForLines(int lineCount) const {
-    return lineCount * getEffectiveLineHeight();
+    return lineCount * getCharHeight();
 }
 
 bool TextMetrics::checkFontFileExists(const std::string& path) const {

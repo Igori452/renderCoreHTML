@@ -6,6 +6,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/mini_browser.dir/src/Node/ElementNode.cpp.o"
   "CMakeFiles/mini_browser.dir/src/Node/Node.cpp.o"
   "CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.o"
+  "CMakeFiles/mini_browser.dir/src/Render/Renderer.cpp.o"
   "CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.o"
   "CMakeFiles/mini_browser.dir/src/Style/Style.cpp.o"
   "CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.o"

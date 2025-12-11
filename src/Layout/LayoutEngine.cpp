@@ -36,7 +36,7 @@ void LayoutEngine::computeLayout(LayoutBox* rootBox, double availableWidth, doub
 
 void LayoutEngine::computeRootElement(LayoutBox* rootBox, double availableWidth, double availableHeight) {
     Node* rootNode = rootBox->getNode();
-    
+
     // Корневой элемент всегда занимает всю доступную область
     rootBox->setPosition(0, 0);
     
@@ -47,6 +47,8 @@ void LayoutEngine::computeRootElement(LayoutBox* rootBox, double availableWidth,
 
     for (auto child : rootBox->getChildren()) {
         Node* childNode = child->getNode();
+        if (childNode->getTagName() == "head") continue;
+
         ElementNode* elementNode = dynamic_cast<ElementNode*>(childNode);
         
         if (elementNode != nullptr && elementNode->getStyle().getProperty(StyleProperty::DISPLAY).getAs<StyleValue::DisplayType>().value() == StyleValue::DisplayType::BLOCK) {
@@ -54,10 +56,12 @@ void LayoutEngine::computeRootElement(LayoutBox* rootBox, double availableWidth,
             maxHeightContent = availableHeight;
         }
 
-        if (childNode->getTagName() == "body") child->setSize(windowWidth, maxHeightContent);
+        maxHeightContent = std::max(maxHeightContent, windowHeight);
+
+        if (childNode->getTagName() == "body") child->setSize(windowWidth, maxHeightContent);   
     }
 
-    rootBox->setSize(windowWidth, maxHeightContent); // Задаем ширину блока для html
+    if (rootBox->getNode()->getTagName() == "html") rootBox->setSize(windowWidth, maxHeightContent); 
 
     clippingElements(rootBox);
 }
@@ -235,9 +239,14 @@ void LayoutEngine::computeBlockElement(LayoutBox* box, double parentX, double pa
         if (explicitWidth == 0 ||
             elementNode->getStyle().getProperty(StyleProperty::WIDTH).getLengthUnit() == StyleValue::LengthUnit::AUTO) {
             double maxChildWidth = 0;
-            for (auto child : box->getChildren()) maxChildWidth = std::max(maxChildWidth, child->getWidth());
+            for (auto child : box->getChildren()) {
+                std::cout << "child->getWidth() + child->getX() - box->getX(): " << child->getX()  << " " << contentWidth << " " << explicitWidth << std::endl;
+                maxChildWidth = std::max(maxChildWidth, child->getWidth() + child->getX() - box->getX());
+            }
+            
             
             if (maxChildWidth > 0) contentWidth = std::min(maxChildWidth, contentWidth);
+            else contentWidth = 0;
         }
 
         if (explicitHeight == 0 || 
@@ -253,6 +262,7 @@ void LayoutEngine::computeBlockElement(LayoutBox* box, double parentX, double pa
 
             maxChildHeight = maxY - box->getY() + maxChildHeight;
             if (maxChildHeight > 0) contentHeight = maxChildHeight;
+            else contentHeight = 0;
         }
         
         // 6. Устанавливаем финальный размер

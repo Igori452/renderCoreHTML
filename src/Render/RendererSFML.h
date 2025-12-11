@@ -11,14 +11,15 @@ class RendererSFML : public Renderer {
         sf::RenderWindow window;
         float scrollOffset = 0.0f;
         float contentHeight = 0.0f;
-        float windowHeight = 600.0f;
 
         void drawElement(LayoutBox& layoutBox) override;
         void drawText(LayoutBox& layoutBox) override;
     public:
-        RendererSFML();
+        RendererSFML() = delete;
+        RendererSFML(double windowWidth_, double windowHeight_);
         void renderLayoutTree(LayoutBox& layoutBox) override;
         void showScene(LayoutBox& rootLayoutBox);
+        double computeTextWidth(const std::string& utf8Text, const TextMetrics& metrics) const override;
 };
 
 #endif

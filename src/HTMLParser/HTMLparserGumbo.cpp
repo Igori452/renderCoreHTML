@@ -79,9 +79,15 @@ Node* HTMLparserGumbo::buildNode() {
             if (!trimmed.empty() && trimmed.back() == ' ') trimmed.pop_back();
 
             if (!trimmed.empty()) {
-                TextElement* t = new TextElement(trimmed);
-                t->setParent(parentNode);
-                parentNode->addChild(t);
+                std::istringstream iss(trimmed);
+                std::string word;
+
+                while (iss >> word) {
+                    word += " ";
+                    TextElement* t = new TextElement(word);
+                    parentNode->addChild(t);
+                }
+
             }
         }
     }

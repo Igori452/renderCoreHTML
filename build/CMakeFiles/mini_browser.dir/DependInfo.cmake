@@ -11,6 +11,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/workspace/src/Node/ElementNode.cpp" "/workspace/build/CMakeFiles/mini_browser.dir/src/Node/ElementNode.cpp.o"
   "/workspace/src/Node/Node.cpp" "/workspace/build/CMakeFiles/mini_browser.dir/src/Node/Node.cpp.o"
   "/workspace/src/Node/TextElement.cpp" "/workspace/build/CMakeFiles/mini_browser.dir/src/Node/TextElement.cpp.o"
+  "/workspace/src/Render/Renderer.cpp" "/workspace/build/CMakeFiles/mini_browser.dir/src/Render/Renderer.cpp.o"
   "/workspace/src/Render/RendererSFML.cpp" "/workspace/build/CMakeFiles/mini_browser.dir/src/Render/RendererSFML.cpp.o"
   "/workspace/src/Style/Style.cpp" "/workspace/build/CMakeFiles/mini_browser.dir/src/Style/Style.cpp.o"
   "/workspace/src/Style/StyleValue.cpp" "/workspace/build/CMakeFiles/mini_browser.dir/src/Style/StyleValue.cpp.o"
