@@ -349,7 +349,7 @@ void LayoutEngine::computeInlineElement(LayoutBox* box, double& currentLineX, do
 
             std::cout << "currentLineY: " << currentLineY << std::endl;
         } else {
-            maxWidth = std::max(maxWidth, contentWidth);
+            maxWidth = std::max(maxWidth, currentLineX - lineXstart);
             currentLineMaxHeight = contentHeight; // тут надо будет сделать максимум в будущем
         }
     
