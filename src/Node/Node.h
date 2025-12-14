@@ -25,8 +25,6 @@ class Node {
         void addChild(Node* node);
         const std::vector<Node*>& getChildren() const;
 
-        void printNodes(int depth = 0);
-
         Type virtual getType() const = 0;
 };
 

@@ -1,5 +1,5 @@
 ###########################
-# Stage 1 — Base image
+# Base image
 ###########################
 FROM gcc:12.2.0 AS base
 
@@ -20,7 +20,7 @@ RUN git clone https://github.com/novnc/noVNC.git /opt/novnc \
 
 
 ###########################
-# Stage 2 — Gumbo
+# Gumbo Stage
 ###########################
 FROM base AS gumbo
 
@@ -37,7 +37,7 @@ RUN wget -q https://github.com/google/gumbo-parser/archive/refs/tags/v0.10.1.tar
 
 
 ###########################
-# Stage 3 — SFML
+# SFML Stage
 ###########################
 FROM base AS sfml
 
@@ -50,7 +50,7 @@ RUN apt-get update && apt-get install -y \
 
 
 ###########################
-# Stage 5 — Final Assembly
+# Final Image
 ###########################
 FROM base AS full
 

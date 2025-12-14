@@ -10,7 +10,7 @@ void LayoutBox::addChild(LayoutBox* layoutBox) {
     children.push_back(layoutBox);
 }
 
-Node* LayoutBox::getNode() const { 
+const Node* LayoutBox::getNode() const { 
     return node; 
 }
 

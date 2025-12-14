@@ -45,10 +45,6 @@ class StyleValue {
         static StyleValue setStyle(uint32_t _value);
 
         static LengthUnit getLengthUnitFromString(const std::string& LengthUnitString);
-
-        DisplayType getDisplayType() const;
-        double getNumericValue() const;
-        uint32_t getColorValue() const;
     public:
         static StyleValue setStyleValueFromString(StyleProperty property, const std::string& stringValue, const std::string& lengthUnitString_ = "");
 

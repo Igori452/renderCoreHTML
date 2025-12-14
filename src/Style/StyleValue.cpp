@@ -170,27 +170,6 @@ StyleValue StyleValue::setStyleValueFromString (StyleProperty property, const st
     }
 }
 
-StyleValue::DisplayType StyleValue::getDisplayType() const {
-    if (type != Type::DISPLAY) {
-        return DisplayType::BLOCK;
-    }
-    return displayType;
-}
-
-double StyleValue::getNumericValue() const {
-    if (type != Type::DOUBLE) {
-        return 0.0;
-    }
-    return numericValue;
-}
-
-uint32_t StyleValue::getColorValue() const {
-    if (type != Type::COLOR) {
-        return 0;
-    }
-    return colorValue;
-}
-
 StyleValue::LengthUnit StyleValue::getLengthUnit() const {
     return lengthUnit;
 }

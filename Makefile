@@ -6,4 +6,4 @@ build:
 
 # Запуск контейнера с VNC и приложением
 run:
-	docker run -it --rm -p 5900:5900 -p 8080:8080 -v ${PWD}:/workspace mini-browser:full 
+	docker run -it --rm -p 8080:8080 -v ${PWD}:/workspace mini-browser:full 

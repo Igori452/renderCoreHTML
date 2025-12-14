@@ -1,11 +1,13 @@
 #include "RendererSFML.h"
 
 RendererSFML::RendererSFML(double windowWidth_, double windowHeight_) :
-    window(sf::VideoMode(windowWidth_, windowHeight_), "SFML - Mini Browser") {}
+    window(sf::VideoMode(windowWidth_, windowHeight_), "SFML - Mini Browser") {
+        Renderer::init(this); // Установка стратегии для вычисления правильных метрик шрифта (не обязательный метод)
+    }
 
 void RendererSFML::drawElement(LayoutBox& layoutBox) {
 
-    Node* node = layoutBox.getNode();
+    const Node* node = layoutBox.getNode();
 
     double x = layoutBox.getX();
     double y = layoutBox.getY();
@@ -37,7 +39,7 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
 
     if (node->getType() == Node::Type::ELEMENT_NODE) {
 
-        ElementNode* elementNode = dynamic_cast<ElementNode*>(node);
+        const ElementNode* elementNode = dynamic_cast<const ElementNode*>(node);
         auto styleMap = elementNode->getStyle().getMapPropertyMerge();
 
         //  Если overflow: hidden создаём clip-буфер
@@ -188,7 +190,7 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
 }
 
 void RendererSFML::drawText(LayoutBox& layoutBox) {
-    Node* node = layoutBox.getNode();
+    const Node* node = layoutBox.getNode();
 
     double x = layoutBox.getX();
     double y = layoutBox.getY();
@@ -208,7 +210,7 @@ void RendererSFML::drawText(LayoutBox& layoutBox) {
     if (node->getType() != Node::Type::TEXT_NODE)
         return;
 
-    TextElement* textElement = dynamic_cast<TextElement*>(node);
+    const TextElement* textElement = dynamic_cast<const TextElement*>(node);
     TextMetrics textMetrics = textElement->getTextMetrics();
 
     std::string textContent = textElement->getText();
@@ -280,11 +282,11 @@ void RendererSFML::drawText(LayoutBox& layoutBox) {
 
 // Рекурсивная функция обхода дерева LayoutBox
 void RendererSFML::renderLayoutTree(LayoutBox& layoutBox) {
-    Node* node = layoutBox.getNode();
+    const Node* node = layoutBox.getNode();
 
     // Сначала рисуем ВСЕ блоки
     if (node->getType() == Node::Type::ELEMENT_NODE && 
-        dynamic_cast<ElementNode*>(node)->getStyle().getProperty(StyleProperty::DISPLAY).getAs<StyleValue::DisplayType>().value() == StyleValue::DisplayType::BLOCK) {
+        dynamic_cast<const ElementNode*>(node)->getStyle().getProperty(StyleProperty::DISPLAY).getAs<StyleValue::DisplayType>().value() == StyleValue::DisplayType::BLOCK) {
         drawElement(layoutBox);
     }
     
@@ -296,7 +298,7 @@ void RendererSFML::renderLayoutTree(LayoutBox& layoutBox) {
     
     // И только потом рисуем текст (ПОВЕРХ блоков)
     if (node->getType() == Node::Type::TEXT_NODE || (node->getType() == Node::Type::ELEMENT_NODE &&
-        dynamic_cast<ElementNode*>(node)->getStyle().getProperty(StyleProperty::DISPLAY).getAs<StyleValue::DisplayType>().value() == StyleValue::DisplayType::INLINE)) {
+        dynamic_cast<const ElementNode*>(node)->getStyle().getProperty(StyleProperty::DISPLAY).getAs<StyleValue::DisplayType>().value() == StyleValue::DisplayType::INLINE)) {
         drawText(layoutBox);
     }
 }

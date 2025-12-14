@@ -22,14 +22,6 @@ functional
 vector
 -
 
-/workspace/src/Layout/LayoutEngine.cpp
-LayoutEngine.h
-/workspace/src/Layout/LayoutEngine.h
-
-/workspace/src/Layout/LayoutEngine.h
-LayoutBox.h
-/workspace/src/Layout/LayoutBox.h
-
 /workspace/src/Node/ElementNode.h
 string
 -
@@ -70,6 +62,18 @@ ElementNode.h
 
 /workspace/src/Render/Renderer.h
 string
+-
+
+/workspace/src/Render/RendererSFML.cpp
+RendererSFML.h
+/workspace/src/Render/RendererSFML.h
+
+/workspace/src/Render/RendererSFML.h
+Renderer.h
+/workspace/src/Render/Renderer.h
+../Layout/LayoutBox.h
+/workspace/src/Layout/LayoutBox.h
+SFML/Graphics.hpp
 -
 
 /workspace/src/Style/Style.h

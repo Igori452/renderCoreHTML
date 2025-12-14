@@ -23,8 +23,6 @@ class ElementNode : public Node {
         void setAttribute(std::string attrName, std::string attrValue);
         const std::map<std::string, std::string>& getAttributes() const;
         const Style& getStyle() const;
-        
-        void printNodes();
-    };
+};
 
 #endif

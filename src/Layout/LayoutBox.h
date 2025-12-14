@@ -22,7 +22,7 @@ class LayoutBox {
 
         LayoutBox* parent;
         std::vector<LayoutBox*> children;  
-        Node* node;
+        const Node* node;
 
         LayoutBox() = default;
 
@@ -31,7 +31,7 @@ class LayoutBox {
         
         void addChild(LayoutBox* layoutBox);
 
-        Node* getNode() const;
+        const Node* getNode() const;
         std::vector<LayoutBox*>& getChildren();
 
         void setPosition(double x_, double y_);
