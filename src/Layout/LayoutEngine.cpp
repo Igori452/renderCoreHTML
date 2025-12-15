@@ -71,6 +71,18 @@ void LayoutEngine::clippingElements(LayoutBox* box) {
     double contentWidth  = box->getVisibleWidth();
     double contentHeight = box->getVisibleHeight();
 
+    const ElementNode* nodeBox = dynamic_cast<const ElementNode*>(box->getNode());
+
+    double paddingRight = 0;
+    double paddingBottom = 0;
+    double borderNode = 0;
+
+    if (nodeBox != 0) {
+        paddingRight = nodeBox->getStyle().getProperty(StyleProperty::PADDING_RIGHT).getAs<double>().value();
+        paddingBottom = nodeBox->getStyle().getProperty(StyleProperty::PADDING_BOTTOM).getAs<double>().value();
+        borderNode = nodeBox->getStyle().getProperty(StyleProperty::BORDER_WIDTH).getAs<double>().value();
+    }
+
     for (auto child : box->getChildren()) {
 
         const ElementNode* node = dynamic_cast<const ElementNode*>(child->getNode());
@@ -80,12 +92,12 @@ void LayoutEngine::clippingElements(LayoutBox* box) {
         double oldVisibleWidth = child->getVisibleWidth();
         double oldVisibleHeight = child->getVisibleHeight();
 
-        double childRight  = child->getX() + oldVisibleWidth;
-        double parentRight = box->getX() + contentWidth;
+        double childRight  = child->getX() + oldVisibleWidth - border;
+        double parentRight = box->getX() + contentWidth - paddingRight - borderNode;
 
         if (childRight > parentRight) {
             double overflow = childRight - parentRight;
-            double newWidth = std::max(0.0, child->getVisibleWidth() - overflow);
+            double newWidth = std::max(0.0, child->getVisibleWidth() - overflow - border);
             child->setVisibleWidth(newWidth);
         }
 
@@ -104,8 +116,8 @@ void LayoutEngine::clippingElements(LayoutBox* box) {
         }
 
         // Обрезание по высоте
-        double childBottom  = child->getY() + oldVisibleHeight;
-        double parentBottom = box->getY() + contentHeight;
+        double childBottom  = child->getY() + oldVisibleHeight - border;
+        double parentBottom = box->getY() + contentHeight - paddingBottom; - borderNode;
 
         if (childBottom > parentBottom) {
             double overflow = childBottom - parentBottom;
@@ -240,7 +252,6 @@ void LayoutEngine::computeBlockElement(LayoutBox* box, double parentX, double pa
             elementNode->getStyle().getProperty(StyleProperty::WIDTH).getLengthUnit() == StyleValue::LengthUnit::AUTO) {
             double maxChildWidth = 0;
             for (auto child : box->getChildren()) {
-                std::cout << "child->getWidth() + child->getX() - box->getX(): " << child->getX()  << " " << contentWidth << " " << explicitWidth << std::endl;
                 maxChildWidth = std::max(maxChildWidth, child->getWidth() + child->getX() - box->getX());
             }
             
@@ -265,8 +276,8 @@ void LayoutEngine::computeBlockElement(LayoutBox* box, double parentX, double pa
         }
         
         // 6. Устанавливаем финальный размер
-        double totalWidth = contentWidth + paddingLeft + paddingRight;
-        double totalHeight = contentHeight + paddingTop + paddingBottom;
+        double totalWidth = contentWidth + paddingRight + border;
+        double totalHeight = contentHeight + paddingBottom + border;
 
         box->setSize(totalWidth, totalHeight);
 
@@ -303,11 +314,8 @@ void LayoutEngine::computeInlineElement(LayoutBox* box, double& currentLineX, do
             double childLineX = currentLineX;
             double childLineMaxHeight = currentLineMaxHeight;
             
-            std::cout << "!!!!!!!!!!currentLineX: " << currentLineX << std::endl;
             for (auto child : box->getChildren()) 
                 computeInlineElement(child, childLineX, currentLineY, childLineMaxHeight, availableWidth, maxWidth, lineXstart);
-
-            std::cout << "!!!!!!!!!!currentLineX: " << currentLineX << " " << childLineX << " " << lineXstart << " " << box->getNode()->getTagName() << " " << availableWidth << std::endl << std::endl;
 
             // Вычисляем общую ширину как разницу между конечной и начальной позицией
             if (childLineX < currentLineX) {
@@ -327,12 +335,11 @@ void LayoutEngine::computeInlineElement(LayoutBox* box, double& currentLineX, do
             currentLineY += currentLineMaxHeight;
             currentLineMaxHeight = contentHeight;
 
-            std::cout << "currentLineY: " << currentLineY << std::endl;
+            maxWidth = std::max(maxWidth, availableWidth);
         } else {
-            maxWidth = std::max(maxWidth, currentLineX - lineXstart);
-            currentLineMaxHeight = contentHeight; // тут надо будет сделать максимум в будущем
+            maxWidth = std::max(maxWidth, currentLineX - lineXstart + contentWidth);
+            currentLineMaxHeight = std::max(currentLineMaxHeight, contentHeight);
         }
-    
         // Устанавливаем позицию и размер
         if (contentWidth == availableWidth) box->setPosition(lineXstart, currentLineY);
         else box->setPosition(currentLineX, currentLineY);

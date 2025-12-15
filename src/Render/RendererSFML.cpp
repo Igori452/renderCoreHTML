@@ -44,10 +44,10 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
 
         //  Если overflow: hidden создаём clip-буфер
         sf::RenderTexture* clipBuffer = nullptr;
+        
+        borderWidth = styleMap.find(StyleProperty::BORDER_WIDTH)->second.getAs<double>().value();
 
         if (layoutBox.isOverflow()) {
-            borderWidth = styleMap.find(StyleProperty::BORDER_WIDTH)->second.getAs<double>().value();
-
             clippedX = borderWidth;
             clippedY = borderWidth;
 
@@ -66,6 +66,9 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
                 (unsigned)(heightBufferSize)
             );
             clipBuffer->clear(sf::Color::Transparent);
+        } else {
+            width -= borderWidth;
+            height -= borderWidth;
         }
 
         // Выбираем, куда рисовать: окно или буфер
@@ -334,6 +337,10 @@ double RendererSFML::computeTextWidth(const std::string& utf8Text, const TextMet
 
     unsigned pixelSize = (unsigned)metrics.getFontSize();
 
+    // Получаем стили шрифта
+    bool isItalic = metrics.getFontStyleType() == StyleValue::FontStyleType::ITALIC;
+    bool isBold = metrics.getFontWeightType() == StyleValue::FontWeightType::BOLD;
+
     sf::String sfStr(utf8Text);
     std::basic_string<sf::Uint32> text32 = sfStr.toUtf32();
 
@@ -349,11 +356,51 @@ double RendererSFML::computeTextWidth(const std::string& utf8Text, const TextMet
         const sf::Glyph& glyph = font.getGlyph(
             c,
             pixelSize,
-            metrics.getFontStyleType() == StyleValue::FontStyleType::ITALIC
+            isBold,  // bold параметр
+            isItalic // italic параметр
         );
 
         sfmlWidth += glyph.advance;
+
+        if (i == 0) sfmlWidth += std::abs(glyph.bounds.left);
     }
 
     return sfmlWidth;
+}
+
+double RendererSFML::computeTextHeight(const std::string& utf8Text, const TextMetrics& metrics) const {
+    sf::Font font;
+    if (!font.loadFromFile(metrics.getFontPath()))
+        return 1.0;
+
+    unsigned pixelSize = (unsigned)metrics.getFontSize();
+    bool isItalic = metrics.getFontStyleType() == StyleValue::FontStyleType::ITALIC;
+    bool isBold = metrics.getFontWeightType() == StyleValue::FontWeightType::BOLD;
+
+    // Используем стандартный интервал строки
+    float lineSpacing = font.getLineSpacing(pixelSize);
+    
+    if (!utf8Text.empty()) {
+        sf::String sfStr(utf8Text);
+        std::basic_string<sf::Uint32> text32 = sfStr.toUtf32();
+        
+        float maxHeight = 0;
+        
+        for (size_t i = 0; i < text32.size(); i++) {
+            sf::Uint32 c = text32[i];
+            const sf::Glyph& glyph = font.getGlyph(c, pixelSize, isBold, isItalic);
+            
+            // Полная высота глифа
+            float glyphFullHeight = std::abs(glyph.bounds.top) + (glyph.bounds.height - std::abs(glyph.bounds.top));
+            
+            if (glyphFullHeight > maxHeight) {
+                maxHeight = glyphFullHeight;
+            }
+        }
+        
+        // Возвращаем большее значение
+        return std::max(lineSpacing, maxHeight);
+    }
+    
+    return lineSpacing;
 }

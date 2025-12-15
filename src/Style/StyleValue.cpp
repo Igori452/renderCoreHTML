@@ -69,7 +69,9 @@ bool StyleValue::parseColor(const std::string& stringColor, uint32_t& color) {
         {"cyan", 0x00FFFFFF}, 
         {"magenta", 0xFF00FFFF},
         {"gray", 0x808080FF}, 
-        {"transparent", 0x00000000}
+        {"orange", 0xFFA500FF},
+        {"purple", 0X800080FF},
+        {"transparent", 0x00000000},
     };
     
     auto it = colors.find(stringColor);
@@ -82,8 +84,10 @@ bool StyleValue::parseColor(const std::string& stringColor, uint32_t& color) {
         color = std::stoul(stringColor.substr(1), nullptr, 16) << 8 | 0xFF;
         return true;
     }
+
+    color = 0x000000FF;
     
-    return false;
+    return true;
 }
 
 StyleValue::LengthUnit StyleValue::getLengthUnitFromString(const std::string& LengthUnitString) {
@@ -104,7 +108,7 @@ StyleValue StyleValue::setStyleValueFromString (StyleProperty property, const st
             if (stringValue == "inline") return setStyle(DisplayType::INLINE);
             else if (stringValue == "block") return setStyle(DisplayType::BLOCK);
             else if (stringValue == "none") return setStyle(DisplayType::NONE);
-            else return setStyle();
+            else return setStyle(DisplayType::BLOCK);
         }
 
         case StyleProperty::BACKGROUND_IMAGE:
@@ -115,20 +119,20 @@ StyleValue StyleValue::setStyleValueFromString (StyleProperty property, const st
         case StyleProperty::FONT_STYLE: {
             if (stringValue == "normal") return setStyle(FontStyleType::NORMAL);
             else if (stringValue == "italic") return setStyle(FontStyleType::ITALIC);
-            else return setStyle();
+            else return setStyle(FontStyleType::NORMAL);;
         }
 
         case StyleProperty::FONT_DECORATION: {
             if (stringValue == "normal") return setStyle(FontDecorationType::NORMAL);
             else if (stringValue == "underline") return setStyle(FontDecorationType::UNDERLINED);
             else if (stringValue == "line-through") return setStyle(FontDecorationType::LINE_THROUGH);
-            else return setStyle();
+            else return setStyle(FontDecorationType::NORMAL);
         }
 
         case StyleProperty::FONT_WEIGHT: {
             if (stringValue == "normal") return setStyle(FontWeightType::NORMAL);
             else if (stringValue == "bold") return setStyle(FontWeightType::BOLD);
-            else return setStyle();
+            else return setStyle(FontWeightType::NORMAL);
         }
 
         case StyleProperty::COLOR:

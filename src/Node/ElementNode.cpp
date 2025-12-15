@@ -7,8 +7,7 @@ ElementNode::ElementNode(std::string tagName) : Node(tagName) {
     if (   tagName == "b" 
         || tagName == "strong"
         || tagName == "i"
-        || tagName == "span"
-        /*|| tagName == "img"*/ ) style.setProperty("display", "inline");
+        || tagName == "span" ) style.setProperty("display", "inline");
 
     if (tagName == "b" || tagName == "strong") style.setProperty("font-weight", "bold");
     if (tagName == "i") style.setProperty("font-style", "italic");
@@ -16,8 +15,6 @@ ElementNode::ElementNode(std::string tagName) : Node(tagName) {
 
 void ElementNode::setAttribute (std::string attrName, std::string attrValue) {
     if (attrName == "style") {
-        std::cout << std::endl << attrValue << std::endl;
-
         // Удаляем все переносы строк
         attrValue.erase(std::remove(attrValue.begin(), attrValue.end(), '\n'), attrValue.end());
         attrValue.erase(std::remove(attrValue.begin(), attrValue.end(), '\r'), attrValue.end());

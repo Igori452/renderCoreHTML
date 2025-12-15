@@ -36,7 +36,6 @@ bool Style::setProperty(const std::string& property, const std::string& valuePro
 
     if (propertyObject == StyleProperty::UNKNOWN) return false;
 
-    std::cout << int(propertyObject) << std::endl;
     if (valueProperty == "auto") properties[propertyObject] = StyleValue::setStyleValueFromString(propertyObject, "0", valueProperty);
     else properties[propertyObject] = StyleValue::setStyleValueFromString(propertyObject, valueProperty, lengthValue);
 

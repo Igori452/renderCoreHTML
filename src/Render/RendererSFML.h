@@ -20,6 +20,7 @@ class RendererSFML : public Renderer {
         void renderLayoutTree(LayoutBox& layoutBox) override;
         void showScene(LayoutBox& rootLayoutBox);
         double computeTextWidth(const std::string& utf8Text, const TextMetrics& metrics) const override;
+        double computeTextHeight(const std::string& utf8Text, const TextMetrics& metrics) const override;
 };
 
 #endif

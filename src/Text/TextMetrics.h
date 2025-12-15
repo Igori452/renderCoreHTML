@@ -41,6 +41,7 @@ private:
 
     // Реализация паттерна "Стратегия"
     double getCorrectedTextWidth(const std::string& text) const;
+    double getCorrectedTextHeight(const std::string& text) const;
 public:
     TextMetrics() = default;
         

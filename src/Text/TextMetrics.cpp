@@ -59,6 +59,13 @@ double TextMetrics::getCorrectedTextWidth(const std::string& text) const {
     return r->computeTextWidth(text, *this);
 }
 
+double TextMetrics::getCorrectedTextHeight(const std::string& text) const {
+    const Renderer* r = Renderer::get();
+    if (!r) return getCharHeight();
+
+    return r->computeTextHeight(text, *this);
+}
+
 bool TextMetrics::isFontLoaded() const { return fontLoaded; }
 std::string TextMetrics::getFontPath() const { return fontPath; }
 
@@ -129,7 +136,7 @@ double TextMetrics::getTextHeight(const std::string& text) const {
 }
 
 double TextMetrics::getTextHeightForLines(int lineCount) const {
-    return lineCount * getCharHeight();
+    return lineCount * getCorrectedTextHeight("RANDOM text");
 }
 
 bool TextMetrics::checkFontFileExists(const std::string& path) const {
