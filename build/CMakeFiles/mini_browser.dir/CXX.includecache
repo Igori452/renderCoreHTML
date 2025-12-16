@@ -18,14 +18,6 @@ iostream
 ../Node/Node.h
 /workspace/src/Node/Node.h
 
-/workspace/src/HTMLParser/HTMLparserGumbo.cpp
-HTMLparserGumbo.h
-/workspace/src/HTMLParser/HTMLparserGumbo.h
-../Node/ElementNode.h
-/workspace/src/Node/ElementNode.h
-../Node/TextElement.h
-/workspace/src/Node/TextElement.h
-
 /workspace/src/HTMLParser/HTMLparserGumbo.h
 HTMLparser.h
 /workspace/src/HTMLParser/HTMLparser.h
@@ -52,17 +44,9 @@ functional
 vector
 -
 
-/workspace/src/Layout/LayoutEngine.cpp
-LayoutEngine.h
-/workspace/src/Layout/LayoutEngine.h
-
 /workspace/src/Layout/LayoutEngine.h
 LayoutBox.h
 /workspace/src/Layout/LayoutBox.h
-
-/workspace/src/Node/ElementNode.cpp
-ElementNode.h
-/workspace/src/Node/ElementNode.h
 
 /workspace/src/Node/ElementNode.h
 string
@@ -112,12 +96,6 @@ Renderer.h
 ../Layout/LayoutBox.h
 /workspace/src/Layout/LayoutBox.h
 SFML/Graphics.hpp
--
-
-/workspace/src/Style/Style.cpp
-Style.h
-/workspace/src/Style/Style.h
-iostream
 -
 
 /workspace/src/Style/Style.h

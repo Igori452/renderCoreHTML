@@ -13,7 +13,6 @@ class Renderer {
         virtual void drawElement(LayoutBox& layoutBox) = 0;
         virtual void drawText(LayoutBox& layoutBox) = 0;
     public:
-        virtual ~Renderer();
         virtual void renderLayoutTree(LayoutBox& layoutBox) = 0;
         virtual double computeTextWidth(const std::string& utf8Text, const TextMetrics& metrics) const;
         virtual double computeTextHeight(const std::string& utf8Text, const TextMetrics& metrics) const;

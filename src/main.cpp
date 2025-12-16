@@ -21,8 +21,9 @@ void runTest(const std::string& filePath) {
     
     LayoutBox* rootLayoutBox = layoutEngine->buildLayoutTree(rootNode);
     layoutEngine->computeLayout(rootLayoutBox, layoutEngine->getWindowWidth(), layoutEngine->getWindowHeight());
-    
+
     renderer->showScene(*rootLayoutBox);
+    
     
     // Cleanup
     delete layoutEngine;
@@ -66,7 +67,7 @@ int main() {
                      << " (" << fs::path(tests[i]).filename().string() << ")" << std::endl;
         }
         
-        std::cout << "11. Custom HTML file" << std::endl;
+        std::cout << "11. Custom HTML file (current folder ../htmlTest/)" << std::endl;
         std::cout << "0. Exit" << std::endl;
         std::cout << "Enter your choice: ";
         

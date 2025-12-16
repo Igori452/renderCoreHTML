@@ -10,10 +10,6 @@ double Renderer::computeTextHeight(const std::string& utf8Text, const TextMetric
     return 1.0;
 }
 
-Renderer::~Renderer() {
-    if (activeRenderer != nullptr) delete activeRenderer;
-}
-
 void Renderer::init(const Renderer* r) {
     activeRenderer = r;
 }

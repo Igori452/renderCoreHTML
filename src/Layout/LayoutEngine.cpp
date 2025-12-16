@@ -233,7 +233,8 @@ void LayoutEngine::computeBlockElement(LayoutBox* box, double parentX, double pa
                 
                 inlineBox = child;
 
-                if (maxWidth != 0) child->setWidth(maxWidth);
+                if (maxWidth != 0 && child->getNode()->getType() == Node::Type::ELEMENT_NODE) 
+                    child->setWidth(maxWidth);
             }
         }
 
