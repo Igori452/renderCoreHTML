@@ -21,12 +21,15 @@ void runTest(const std::string& filePath) {
     
     LayoutBox* rootLayoutBox = layoutEngine->buildLayoutTree(rootNode);
     layoutEngine->computeLayout(rootLayoutBox, layoutEngine->getWindowWidth(), layoutEngine->getWindowHeight());
+    rootLayoutBox->printLayoutBoxTree();
 
     renderer->showScene(*rootLayoutBox);
     
     // Cleanup
     delete layoutEngine;
     delete renderer;
+    delete rootLayoutBox;
+    delete rootNode;
 }
 
 int main() {

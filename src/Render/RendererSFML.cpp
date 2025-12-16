@@ -60,12 +60,14 @@ void RendererSFML::drawElement(LayoutBox& layoutBox) {
             if (visibleHeight > 0) heightBufferSize = visibleHeight + borderWidth + borderBottom;
             else if (borderBottom > 0) heightBufferSize = borderBottom;
 
-            clipBuffer = new sf::RenderTexture();
-            clipBuffer->create(
-                (unsigned)(widthBufferSize),
-                (unsigned)(heightBufferSize)
-            );
-            clipBuffer->clear(sf::Color::Transparent);
+            if (widthBufferSize > 0 && heightBufferSize > 0) {
+                clipBuffer = new sf::RenderTexture();
+                clipBuffer->create(
+                    (unsigned)(widthBufferSize),
+                    (unsigned)(heightBufferSize)
+                );
+                clipBuffer->clear(sf::Color::Transparent);
+            }
         } else {
             width -= borderWidth;
             height -= borderWidth;

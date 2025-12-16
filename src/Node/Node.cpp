@@ -7,7 +7,6 @@ Node::Node(std::string _tagName) : tagName(_tagName), parent(nullptr) {}
 
 Node::~Node() {
     for (Node* node : childrenNode) delete node;
-    delete parent;
 }
 
 std::string Node::getTagName() const {

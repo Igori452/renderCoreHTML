@@ -6,36 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/workspace/src/HTMLParser/HTMLparser.h
-string
--
-cctype
--
-fstream
--
-iostream
--
-../Node/Node.h
-/workspace/src/Node/Node.h
-
-/workspace/src/HTMLParser/HTMLparserGumbo.cpp
-HTMLparserGumbo.h
-/workspace/src/HTMLParser/HTMLparserGumbo.h
-../Node/ElementNode.h
-/workspace/src/Node/ElementNode.h
-../Node/TextElement.h
-/workspace/src/Node/TextElement.h
-
-/workspace/src/HTMLParser/HTMLparserGumbo.h
-HTMLparser.h
-/workspace/src/HTMLParser/HTMLparser.h
-iostream
--
-queue
--
-gumbo.h
-/workspace/src/HTMLParser/gumbo.h
-
 /workspace/src/Layout/LayoutBox.cpp
 LayoutBox.h
 /workspace/src/Layout/LayoutBox.h
@@ -56,14 +26,6 @@ functional
 vector
 -
 
-/workspace/src/Layout/LayoutEngine.cpp
-LayoutEngine.h
-/workspace/src/Layout/LayoutEngine.h
-
-/workspace/src/Layout/LayoutEngine.h
-LayoutBox.h
-/workspace/src/Layout/LayoutBox.h
-
 /workspace/src/Node/ElementNode.h
 string
 -
@@ -82,14 +44,6 @@ algorithm
 regex
 -
 
-/workspace/src/Node/Node.cpp
-Node.h
-/workspace/src/Node/Node.h
-ElementNode.h
-/workspace/src/Node/ElementNode.h
-TextElement.h
-/workspace/src/Node/TextElement.h
-
 /workspace/src/Node/Node.h
 iostream
 -
@@ -99,10 +53,6 @@ vector
 -
 ../Style/Style.h
 /workspace/src/Style/Style.h
-
-/workspace/src/Node/TextElement.cpp
-TextElement.h
-/workspace/src/Node/TextElement.h
 
 /workspace/src/Node/TextElement.h
 string
@@ -114,24 +64,8 @@ Node.h
 ElementNode.h
 /workspace/src/Node/ElementNode.h
 
-/workspace/src/Render/Renderer.cpp
-Renderer.h
-/workspace/src/Render/Renderer.h
-
 /workspace/src/Render/Renderer.h
 string
--
-
-/workspace/src/Render/RendererSFML.cpp
-RendererSFML.h
-/workspace/src/Render/RendererSFML.h
-
-/workspace/src/Render/RendererSFML.h
-Renderer.h
-/workspace/src/Render/Renderer.h
-../Layout/LayoutBox.h
-/workspace/src/Layout/LayoutBox.h
-SFML/Graphics.hpp
 -
 
 /workspace/src/Style/Style.h
@@ -152,10 +86,6 @@ optional
 StyleProperties.h
 /workspace/src/Style/StyleProperties.h
 
-/workspace/src/Text/TextMetrics.cpp
-TextMetrics.h
-/workspace/src/Text/TextMetrics.h
-
 /workspace/src/Text/TextMetrics.h
 unordered_map
 -
@@ -167,24 +97,4 @@ fstream
 /workspace/src/Style/StyleValue.h
 ../Render/Renderer.h
 /workspace/src/Render/Renderer.h
-
-/workspace/src/main.cpp
-iostream
--
-vector
--
-string
--
-filesystem
--
-Node/Node.h
-/workspace/src/Node/Node.h
-Layout/LayoutBox.h
-/workspace/src/Layout/LayoutBox.h
-Layout/LayoutEngine.h
-/workspace/src/Layout/LayoutEngine.h
-Render/RendererSFML.h
-/workspace/src/Render/RendererSFML.h
-HTMLParser/HTMLparserGumbo.h
-/workspace/src/HTMLParser/HTMLparserGumbo.h
 

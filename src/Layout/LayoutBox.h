@@ -28,6 +28,7 @@ class LayoutBox {
 
     public:
         LayoutBox(Node* node_);
+        ~LayoutBox();
         
         void addChild(LayoutBox* layoutBox);
 
