@@ -24,7 +24,6 @@ void runTest(const std::string& filePath) {
 
     renderer->showScene(*rootLayoutBox);
     
-    
     // Cleanup
     delete layoutEngine;
     delete renderer;
